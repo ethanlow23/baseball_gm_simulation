@@ -10,12 +10,20 @@ positions = [
     "LF", "CF", "RF", "3B", "SS", "2B", "1B", "C", "DH"
 ]
 
+# HOME SCREEN
 @home_api.route('/')
 def home():
-    return jsonify({"message": "hellooo world"})
+    return jsonify({"message": "welcome to baseball gm simulation", "user_team": user_team.serialize()})
 
-@home_api.route('/create', methods=['POST'])
-def create():
+# TEST ROUTE TO VIEW DATABASE INFORMATION
+@home_api.route('/welcome')
+def welcome():
+    leagues = League.query.all()
+    return jsonify([league.serialize() for league in leagues])
+
+# CREATE A LEAGUE, GENERATE TEAMS AND PLAYERS
+@home_api.route('/league', methods=['POST'])
+def create_league():
     if request.method == 'POST':
         # CREATE A LEAGUE
         leagues_count = League.query.count()
@@ -74,3 +82,22 @@ def create():
                     db.session.rollback()
                     return jsonify({"error": "failed to generate pitcher"})
         return jsonify({"success": "created new league"})
+
+# GENERATE SEASON SCHEDULE
+@home_api.route('/schedule', methods=['POST'])
+def generate_scheduele():
+    if request.method == 'POST':
+        teams = Team.query.all()
+        for team in teams:
+            for matchup in teams:
+                if team.id != matchup.id:
+                    opponent = matchup.name
+                    game = Game(opponent=opponent, team=team)
+                    db.session.add(game)
+                    try:
+                        db.session.commit()
+                    except Exception as e:
+                        print(e)
+                        db.session.rollback()
+                        return jsonify({"error": "failed to schedule game"})
+        return jsonify({"success": "generated schedule"})

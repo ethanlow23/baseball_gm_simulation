@@ -22,3 +22,26 @@ class Player(db.Model):
     velocity = db.Column(db.Integer, nullable=False)
     league_id = db.Column(db.Integer, db.ForeignKey('league.id'), nullable=False)
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
+
+class Team_Stat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    at_bats = db.Column(db.Integer)
+    hits = db.Column(db.Integer)
+    doubles = db.Column(db.Integer)
+    triples = db.Column(db.Integer)
+    homeruns = db.Column(db.Integer)
+    rbis = db.Column(db.Integer)
+    team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
+
+class Player_Stat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    at_bats = db.Column(db.Integer)
+    hits = db.Column(db.Integer)
+    doubles = db.Column(db.Integer)
+    triples = db.Column(db.Integer)
+    homeruns = db.Column(db.Integer)
+    rbis = db.Column(db.Integer)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
+
+class Game(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
