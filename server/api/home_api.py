@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app import db, League, Team, Player
+from app import db, League, Team, Player, Game
 
 home_api = Blueprint('home_api', __name__)
 
@@ -13,7 +13,7 @@ positions = [
 # HOME SCREEN
 @home_api.route('/')
 def home():
-    return jsonify({"message": "welcome to baseball gm simulation", "user_team": user_team.serialize()})
+    return jsonify({"message": "welcome to baseball gm simulation"})
 
 # TEST ROUTE TO VIEW DATABASE INFORMATION
 @home_api.route('/welcome')
@@ -101,3 +101,8 @@ def generate_scheduele():
                         db.session.rollback()
                         return jsonify({"error": "failed to schedule game"})
         return jsonify({"success": "generated schedule"})
+
+@home_api.route('/simulate', methods=['POST'])
+def simulate():
+    if request.method == 'POST':
+        return jsonify({"success": "game completed"})
