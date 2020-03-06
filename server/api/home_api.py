@@ -88,18 +88,21 @@ def create_league():
 def generate_scheduele():
     if request.method == 'POST':
         teams = Team.query.all()
-        for team in teams:
-            for matchup in teams:
-                if team.id != matchup.id:
-                    opponent = matchup.name
-                    game = Game(opponent=opponent, team=team)
-                    db.session.add(game)
-                    try:
-                        db.session.commit()
-                    except Exception as e:
-                        print(e)
-                        db.session.rollback()
-                        return jsonify({"error": "failed to schedule game"})
+        for i in range(1, len(teams)):
+            teams = teams[:1] + teams[len(teams) - 1:] + teams[1:len(teams) - 1]
+            for j in range(int(len(teams) / 2)):
+                season = 2020
+                game_number = str(i)
+                game = Game(season=season, game_number=game_number)
+                game.teams.append(teams[j])
+                game.teams.append(teams[len(teams) - 1 - j])
+                db.session.add(game)
+                try:
+                    db.session.commit()
+                except Exception as e:
+                    print(e)
+                    db.session.rollback()
+                    return jsonify({"error": "failed to schedule game"})
         return jsonify({"success": "generated schedule"})
 
 @home_api.route('/simulate', methods=['POST'])
