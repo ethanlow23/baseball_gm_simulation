@@ -20,6 +20,12 @@ def home():
 def welcome():
     leagues = League.query.all()
     return jsonify([league.serialize() for league in leagues])
+@home_api.route('/games')
+def games():
+    games = Game.query.all()
+    game = Game.query.first()
+    print(game.teams)
+    return jsonify([game.serialize() for game in games])
 
 # CREATE A LEAGUE, GENERATE TEAMS AND PLAYERS
 @home_api.route('/league', methods=['POST'])
