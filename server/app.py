@@ -102,7 +102,7 @@ class Team_Stat(db.Model):
     doubles = db.Column(db.Integer, nullable=False, default=0)
     triples = db.Column(db.Integer, nullable=False, default=0)
     homeruns = db.Column(db.Integer, nullable=False, default=0)
-    rbis = db.Column(db.Integer, nullable=False, default=0)
+    rbi = db.Column(db.Integer, nullable=False, default=0)
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
 
     def serialize(self):
@@ -116,8 +116,8 @@ class Team_Stat(db.Model):
             "doubles": self.doubles,
             "triples": self.triples,
             "homeruns": self.homeruns,
-            "rbis": self.rbis,
-            "player_id": self.player_id
+            "rbi": self.rbi,
+            "team_id": self.team_id
         }
 
 class Player_Stat(db.Model):
@@ -130,7 +130,7 @@ class Player_Stat(db.Model):
     doubles = db.Column(db.Integer, nullable=False, default=0)
     triples = db.Column(db.Integer, nullable=False, default=0)
     homeruns = db.Column(db.Integer, nullable=False, default=0)
-    rbis = db.Column(db.Integer, nullable=False, default=0)
+    rbi = db.Column(db.Integer, nullable=False, default=0)
     player_id = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
 
     def serialize(self):
@@ -142,7 +142,7 @@ class Player_Stat(db.Model):
             "doubles": self.doubles,
             "triples": self.triples,
             "homeruns": self.homeruns,
-            "rbis": self.rbis,
+            "rbi": self.rbi,
             "player_id": self.player_id
         }
 
