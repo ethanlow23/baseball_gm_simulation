@@ -15,29 +15,28 @@ positions = [
 def home():
     return jsonify({"message": "welcome to baseball gm simulation"})
 
-# CREATE A LEAGUE, GENERATE TEAMS AND PLAYERS
-@home_api.route('/league', methods=['POST'])
+# CREATE A SEASON, GENERATE TEAMS AND PLAYERS
+@home_api.route('/season', methods=['POST'])
 def create_league():
     if request.method == 'POST':
-        # CREATE A LEAGUE
-        leagues_count = League.query.count()
-        league_name = "League " + str(leagues_count)
-        league = League(name=league_name)
-        db.session.add(league)
+        # CREATE A SEASON
+        season = Season(year=2021)
+        db.session.add(season)
         try:
             db.session.commit()
         except Exception as e:
             print(e)
             db.session.rollback()
-            return jsonify({"error": "failed to create new league"})
+            return jsonify({"error": "failed to create new season"})
         # GENERATE TEAMS
         for i in range(len(cities)):
             city = cities[i]
             name = "team" + str(i)
-            team = Team(city=city, name=name, league=league)
+            team = Team(city=city, name=name, season=season)
             db.session.add(team)
             try:
                 db.session.commit()
+                '''
                 team_stat = Team_Stat(season=2020, team=team)
                 db.session.add(team_stat)
                 try:
@@ -46,6 +45,7 @@ def create_league():
                     print(e)
                     db.session.rollback()
                     return jsonify({"error": "failed to add team stat"})
+                '''
             except Exception as e:
                 print(e)
                 db.session.rollback()
@@ -59,10 +59,11 @@ def create_league():
                 contact = 80
                 power = 80
                 velocity = 0
-                player = Player(first_name=first_name, last_name=last_name, age=age, position=position, contact=contact, power=power, velocity=velocity, league=league, team=team)
+                player = Player(first_name=first_name, last_name=last_name, age=age, position=position, contact=contact, power=power, velocity=velocity, season=season, team=team)
                 db.session.add(player)
                 try:
                     db.session.commit()
+                    '''
                     player_stat = Player_Stat(season=2020, player=player)
                     db.session.add(player_stat)
                     try:
@@ -71,6 +72,7 @@ def create_league():
                         print(e)
                         db.session.rollback()
                         return jsonify({"error": "failed to add player stat"})
+                    '''
                 except Exception as e:
                     print(e)
                     db.session.rollback()
@@ -84,10 +86,11 @@ def create_league():
                 contact = 0
                 power = 0
                 velocity = 80
-                pitcher = Player(first_name=first_name, last_name=last_name, age=age, position=position, contact=contact, power=power, velocity=velocity, league=league, team=team)
+                pitcher = Player(first_name=first_name, last_name=last_name, age=age, position=position, contact=contact, power=power, velocity=velocity, season=season, team=team)
                 db.session.add(pitcher)
                 try:
                     db.session.commit()
+                    '''
                     player_stat = Player_Stat(season=2020, player=pitcher)
                     db.session.add(player_stat)
                     try:
@@ -96,11 +99,12 @@ def create_league():
                         print(e)
                         db.session.rollback()
                         return jsonify({"error": "failed to add team stat"})
+                    '''
                 except Exception as e:
                     print(e)
                     db.session.rollback()
                     return jsonify({"error": "failed to generate pitcher"})
-        return jsonify({"success": "created new league"})
+        return jsonify({"success": "created new season"})
 
 @home_api.route('/teams')
 def teams():
@@ -111,13 +115,13 @@ def teams():
 @home_api.route('/schedule', methods=['POST'])
 def generate_schedule():
     if request.method == 'POST':
-        teams = League.query.get(3).teams
+        teams = Season.query.get(1).teams
         for i in range(1, len(teams)):
             teams = teams[:1] + teams[len(teams) - 1:] + teams[1:len(teams) - 1]
             for j in range(int(len(teams) / 2)):
-                season = 2020
+                season = Season.query.get(1)
                 game_number = str(i)
-                game = Game(season=season, game_number=game_number)
+                game = Game(game_number=game_number, season=season)
                 game.teams.append(teams[j])
                 game.teams.append(teams[len(teams) - 1 - j])
                 db.session.add(game)
@@ -129,6 +133,12 @@ def generate_schedule():
                     return jsonify({"error": "failed to schedule game"})
         return jsonify({"success": "generated schedule"})
 
+@home_api.route('/games')
+def games():
+    all_games = Game.query.all()
+    return jsonify([game.serialize() for game in all_games])
+
+'''
 @home_api.route('/simulate', methods=['POST'])
 def simulate():
     if request.method == 'POST':
@@ -322,3 +332,4 @@ def simulate():
                     print(e)
                     return jsonify({"error": "failed to update player stats"})
         return jsonify({"success": "games completed"})
+'''
