@@ -7,16 +7,19 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{}:{}@localhost/{}'.format
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-class League(db.Model):
+class Season(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    teams = db.relationship('Team', backref='league')
-    players = db.relationship('Player', backref='league')
+    # league = db.Column(db.String(80), unique=True, nullable=False)
+    year = db.Column(db.Integer, unique=True, nullable=False)
+    teams = db.relationship('Team', backref='season')
+    players = db.relationship('Player', backref='season')
+    games = db.relationship('Game', backref='season')
 
     def serialize(self):
         return {
             "id": self.id,
-            "name": self.name,
+            # "league": self.league,
+            "year": self.year,
             "teams": [team.serialize() for team in self.teams],
             "players": [player.serialize() for player in self.players]
         }
@@ -26,11 +29,16 @@ game_teams = db.Table('game_teams',
     db.Column('team_id', db.Integer, db.ForeignKey('team.id'), primary_key=True)
 )
 
+game_players = db.Table('game_players',
+    db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True),
+    db.Column('player_id', db.Integer, db.ForeignKey('player.id'), primary_key=True)
+)
+
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     city = db.Column(db.String(80), nullable=False)
     name = db.Column(db.String(80), nullable=False)
-    league_id = db.Column(db.Integer, db.ForeignKey('league.id'), nullable=False)
+    season_id = db.Column(db.Integer, db.ForeignKey('season.id'), nullable=False)
     players = db.relationship('Player', backref='team')
     team_stats = db.relationship('Team_Stat', backref='team')
     games = db.relationship('Game', secondary=game_teams, backref='teams')
@@ -40,7 +48,7 @@ class Team(db.Model):
             "id": self.id,
             "city": self.city,
             "name": self.name,
-            "league_id": self.league_id,
+            "season_id": self.season_id,
             "players": [player.serialize() for player in self.players],
             "team_stats": [team_stat.serialize() for team_stat in self.team_stats],
             "games": [game.serialize() for game in self.games]
@@ -55,9 +63,10 @@ class Player(db.Model):
     contact = db.Column(db.Integer, nullable=False)
     power = db.Column(db.Integer, nullable=False)
     velocity = db.Column(db.Integer, nullable=False)
-    league_id = db.Column(db.Integer, db.ForeignKey('league.id'), nullable=False)
+    season_id = db.Column(db.Integer, db.ForeignKey('season.id'), nullable=False)
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
     player_stats = db.relationship('Player_Stat', backref='player')
+    games = db.relationship('Game', secondary=game_players, backref='players')
 
     def serialize(self):
         return {
@@ -69,34 +78,35 @@ class Player(db.Model):
             "contact": self.contact,
             "power": self.power,
             "velocity": self.velocity,
-            "league_id": self.league_id,
+            "season_id": self.season_id,
             "team_id": self.team_id,
             "player_stats": [player_stat.serialize() for player_stat in self.player_stats]
         }
 
 class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    season = db.Column(db.Integer, nullable=False)
     game_number = db.Column(db.Integer, nullable=False)
-    home_score = db.Column(db.Integer, nullable=False, default=0)
-    away_score = db.Column(db.Integer, nullable=False, default=0)
-
+    season_id = db.Column(db.Integer, db.ForeignKey('season.id'), nullable=False)
+    team_stats = db.relationship('Team_Stat', backref='game')
+    player_stats = db.relationship('Player_Stat', backref='game')
+    
     def serialize(self):
         return {
             "id": self.id,
-            "season": self.season,
             "game_number": self.game_number,
-            "home_score": self.home_score,
-            "away_score": self.away_score
+            "season_id": self.season_id,
+            "teams": [team.serialize() for team in self.teams],
+            "team_stats": [team_stat.serialize() for team_stat in self.team_stats],
+            "players": [player.serialize() for player in self.players],
+            "player_stats": [player_stat.serialize() for player_stat in self.player_stats]
         }
 
 class Team_Stat(db.Model):
     __tablename__ = "team_stat"
 
     id = db.Column(db.Integer, primary_key=True)
-    season = db.Column(db.Integer, nullable=False)
-    wins = db.Column(db.Integer, nullable=False, default=0)
-    losses = db.Column(db.Integer, nullable=False, default=0)
+    # wins = db.Column(db.Integer, nullable=False, default=0)
+    # losses = db.Column(db.Integer, nullable=False, default=0)
     at_bats = db.Column(db.Integer, nullable=False, default=0)
     hits = db.Column(db.Integer, nullable=False, default=0)
     doubles = db.Column(db.Integer, nullable=False, default=0)
@@ -104,6 +114,8 @@ class Team_Stat(db.Model):
     homeruns = db.Column(db.Integer, nullable=False, default=0)
     rbi = db.Column(db.Integer, nullable=False, default=0)
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
+    season_id = db.Column(db.Integer, db.ForeignKey('season.id'), nullable=False)
 
     def serialize(self):
         return {
@@ -117,14 +129,15 @@ class Team_Stat(db.Model):
             "triples": self.triples,
             "homeruns": self.homeruns,
             "rbi": self.rbi,
-            "team_id": self.team_id
+            "team_id": self.team_id,
+            "game_id": self.game_id,
+            "season_id": self.season_id
         }
 
 class Player_Stat(db.Model):
     __tablename__ = "player_stat"
 
     id = db.Column(db.Integer, primary_key=True)
-    season = db.Column(db.Integer, nullable=False)
     at_bats = db.Column(db.Integer, nullable=False, default=0)
     hits = db.Column(db.Integer, nullable=False, default=0)
     doubles = db.Column(db.Integer, nullable=False, default=0)
@@ -132,18 +145,21 @@ class Player_Stat(db.Model):
     homeruns = db.Column(db.Integer, nullable=False, default=0)
     rbi = db.Column(db.Integer, nullable=False, default=0)
     player_id = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
+    season_id = db.Column(db.Integer, db.ForeignKey('season.id'), nullable=False)
 
     def serialize(self):
         return {
             "id": self.id,
-            "season": self.season,
             "at_bats": self.at_bats,
             "hits": self.hits,
             "doubles": self.doubles,
             "triples": self.triples,
             "homeruns": self.homeruns,
             "rbi": self.rbi,
-            "player_id": self.player_id
+            "player_id": self.player_id,
+            "game_id": self.game_id,
+            "season_id": self.season_id
         }
 
 from api.home_api import home_api

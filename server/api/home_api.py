@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app import db, League, Team, Player, Game, Team_Stat, Player_Stat
+from app import db, Season, Team, Player, Game, Team_Stat, Player_Stat
 
 home_api = Blueprint('home_api', __name__)
 
@@ -174,13 +174,16 @@ def simulate():
                     if (swing >= pitch):
                         away_team_totals["H"] += 1
                         away_box_score[away_plate_appearances % 9]["H"] += 1
+                        home_pitching["H"] += 1
                         if (pitch > 0 and pitch < swing * 0.15):
                             print("HOME RUN")
                             away_team_totals["HR"] += 1
                             away_box_score[away_plate_appearances % 9]["HR"] += 1
+                            home_pitching["HR"] += 1
                             rbi = first_base + second_base + third_base + 1
                             away_team_totals["RBI"] += rbi
                             away_box_score[away_plate_appearances % 9]["RBI"] += rbi
+                            home_pitching["R"] += rbi
                             away_score += rbi
                             first_base = 0
                             second_base = 0
