@@ -135,24 +135,24 @@ def generate_schedule():
 
 @home_api.route('/games')
 def games():
-    all_games = Game.query.all()
+    all_games = Game.query.filter_by(game_number=1)
     return jsonify([game.serialize() for game in all_games])
 
-'''
 @home_api.route('/simulate', methods=['POST'])
 def simulate():
     if request.method == 'POST':
         import random
 
-        game_number = Game.query.filter(Game.away_score == 0 and Game.home_score == 0).first().game_number
+        # game_number = Game.query.filter(Game.away_score == 0 and Game.home_score == 0).first().game_number
+        game_number = 1
         games = Game.query.filter_by(game_number=game_number)
         for game in games:
             team_1 = game.teams[0]
             team_2 = game.teams[1]
             home_lineup = Player.query.filter_by(team_id=team_1.id).filter(Player.position != "SP")
-            home_pitcher = Player.query.filter_by(team_id=team_1.id).filter(Player.position == "SP")[0]
+            home_pitcher = Player.query.filter_by(team_id=team_1.id).filter(Player.position == "SP")[(game_number - 1) % 5]
             away_lineup = Player.query.filter_by(team_id=team_2.id).filter(Player.position != "SP")
-            away_pitcher = Player.query.filter_by(team_id=team_2.id).filter(Player.position == "SP")[0]
+            away_pitcher = Player.query.filter_by(team_id=team_2.id).filter(Player.position == "SP")[(game_number - 1) % 5]
             # GAME SIMULATION CODE
             # =============================================================================================================================
             away_score = home_score = half_inning = inning = away_outs = home_outs = first_base = second_base = third_base = away_plate_appearances = home_plate_appearances = 0
@@ -172,7 +172,7 @@ def simulate():
                 home_box_score.append(box_score)
 
             while (away_outs < 27 or away_score == home_score):
-                inning += 1;
+                inning += 1
                 while (half_inning == 0):
                     batter = away_lineup[away_plate_appearances % 9]
                     away_team_totals["AB"] += 1
@@ -302,6 +302,7 @@ def simulate():
             print("------------------------")
             for home_player in home_box_score:
                 print(home_player)
+            '''
             # =============================================================================================================================
             for i in range(away_lineup.count()):
                 player_stat = Player_Stat.query.filter_by(player_id=away_lineup[i].id).filter_by(season=2020).first()
@@ -331,5 +332,5 @@ def simulate():
                 except Exception as e:
                     print(e)
                     return jsonify({"error": "failed to update player stats"})
+            '''
         return jsonify({"success": "games completed"})
-'''
