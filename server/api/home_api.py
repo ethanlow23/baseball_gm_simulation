@@ -144,8 +144,9 @@ def simulate():
         import random
 
         # game_number = Game.query.filter(Game.away_score == 0 and Game.home_score == 0).first().game_number
+        season = Season.query.get(1)
         game_number = 1
-        games = Game.query.filter_by(game_number=game_number)
+        games = Game.query.filter_by(season=season).filter_by(game_number=game_number)
         for game in games:
             team_1 = game.teams[0]
             team_2 = game.teams[1]
@@ -297,40 +298,59 @@ def simulate():
             print("End of game")
             print("Final score is away " + str(away_score) + "-" + str(home_score) + " home")
             print("------------------------")
+            print(away_team_totals)
+            print(home_team_totals)
+            print("------------------------")
             for away_player in away_box_score:
                 print(away_player)
             print("------------------------")
             for home_player in home_box_score:
                 print(home_player)
-            '''
             # =============================================================================================================================
+            team_stat = Team_Stat(at_bats=away_team_totals["AB"], hits=away_team_totals["H"], doubles=away_team_totals["2B"], triples=away_team_totals["3B"], homeruns=away_team_totals["HR"], rbi=away_team_totals["RBI"], team=team_2, game=game, season=season)
+            db.session.add(team_stat)
+            try:
+                db.session.commit()
+            except Exception as e:
+                print(e)
+                db.session.rollback()
+                return jsonify({"error": "failed to update team stats"})
+            team_stat = Team_Stat(at_bats=home_team_totals["AB"], hits=home_team_totals["H"], doubles=home_team_totals["2B"], triples=home_team_totals["3B"], homeruns=home_team_totals["HR"], rbi=home_team_totals["RBI"], team=team_1, game=game, season=season)
+            db.session.add(team_stat)
+            try:
+                db.session.commit()
+            except Exception as e:
+                print(e)
+                db.session.rollback()
+                return jsonify({"error": "failed to update team stats"})
             for i in range(away_lineup.count()):
-                player_stat = Player_Stat.query.filter_by(player_id=away_lineup[i].id).filter_by(season=2020).first()
-                player_stat.at_bats = away_box_score[i]["AB"]
-                player_stat.hits = away_box_score[i]["H"]
-                player_stat.doubles = away_box_score[i]["2B"]
-                player_stat.triples = away_box_score[i]["3B"]
-                player_stat.homeruns = away_box_score[i]["HR"]
-                player_stat.rbi = away_box_score[i]["RBI"]
+                player_ab = away_box_score[i]["AB"]
+                player_h = away_box_score[i]["H"]
+                player_2b = away_box_score[i]["2B"]
+                player_3b = away_box_score[i]["3B"]
+                player_hr = away_box_score[i]["HR"]
+                player_rbi = away_box_score[i]["RBI"]
+                player_stat = Player_Stat(at_bats=player_ab, hits=player_h, doubles=player_2b, triples=player_3b, homeruns=player_hr, rbi=player_rbi, player=away_lineup[i], game=game, season=season)
                 db.session.add(player_stat)
                 try:
                     db.session.commit()
                 except Exception as e:
                     print(e)
+                    db.session.rollback()
                     return jsonify({"error": "failed to update player stats"})
             for i in range(home_lineup.count()):
-                player_stat = Player_Stat.query.filter_by(player_id=home_lineup[i].id).filter_by(season=2020).first()
-                player_stat.at_bats += home_box_score[i]["AB"]
-                player_stat.hits += home_box_score[i]["H"]
-                player_stat.doubles += home_box_score[i]["2B"]
-                player_stat.triples += home_box_score[i]["3B"]
-                player_stat.homeruns += home_box_score[i]["HR"]
-                player_stat.rbi += home_box_score[i]["RBI"]
+                player_ab += home_box_score[i]["AB"]
+                player_h += home_box_score[i]["H"]
+                player_2b += home_box_score[i]["2B"]
+                player_3b += home_box_score[i]["3B"]
+                player_hr += home_box_score[i]["HR"]
+                player_rbi += home_box_score[i]["RBI"]
+                player_stat = Player_Stat(at_bats=player_ab, hits=player_h, doubles=player_2b, triples=player_3b, homeruns=player_hr, rbi=player_rbi, player=home_lineup[i], game=game, season=season)
                 db.session.add(player_stat)
                 try:
                     db.session.commit()
                 except Exception as e:
                     print(e)
+                    db.session.rollback()
                     return jsonify({"error": "failed to update player stats"})
-            '''
         return jsonify({"success": "games completed"})
