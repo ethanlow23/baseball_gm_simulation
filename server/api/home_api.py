@@ -136,7 +136,28 @@ def generate_schedule():
 @home_api.route('/games')
 def games():
     all_games = Game.query.filter_by(game_number=1)
+    results = []
+    for game in all_games:
+        box_scores = {}
+        t1 = game.team_stats[0]
+        t1_city = t1.team.city
+        t1_score = t1.rbi
+        t1_team_stats = t1.serialize()
+        t1_player_stats = [player_stat.serialize() for player_stat in game.player_stats if player_stat.player.team == t1.team]
+        t2 = game.team_stats[1]
+        t2_city = t2.team.city
+        t2_score = t2.rbi
+        t2_team_stats = t2.serialize()
+        t2_player_stats = [player_stat.serialize() for player_stat in game.player_stats if player_stat.player.team == t2.team]
+        t1_box_score = {'score': t1_score, 'team stats': t1_team_stats, 'player stats': t1_player_stats}
+        box_scores[t1_city] = t1_box_score
+        t2_box_score = {'score': t2_score, 'team stats': t2_team_stats, 'player stats': t2_player_stats}
+        box_scores[t2_city] = t2_box_score
+        results.append(box_scores)
+    return jsonify(results)
+    '''
     return jsonify([game.serialize() for game in all_games])
+    '''
 
 @home_api.route('/simulate', methods=['POST'])
 def simulate():
@@ -306,6 +327,7 @@ def simulate():
             print("------------------------")
             for home_player in home_box_score:
                 print(home_player)
+            '''
             # =============================================================================================================================
             team_stat = Team_Stat(at_bats=away_team_totals["AB"], hits=away_team_totals["H"], doubles=away_team_totals["2B"], triples=away_team_totals["3B"], homeruns=away_team_totals["HR"], rbi=away_team_totals["RBI"], team=team_2, game=game, season=season)
             db.session.add(team_stat)
@@ -353,4 +375,5 @@ def simulate():
                     print(e)
                     db.session.rollback()
                     return jsonify({"error": "failed to update player stats"})
+            '''
         return jsonify({"success": "games completed"})
