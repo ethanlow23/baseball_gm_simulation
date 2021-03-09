@@ -36,16 +36,6 @@ def create_league():
             db.session.add(team)
             try:
                 db.session.commit()
-                '''
-                team_stat = Team_Stat(season=2020, team=team)
-                db.session.add(team_stat)
-                try:
-                    db.session.commit()
-                except Exception as e:
-                    print(e)
-                    db.session.rollback()
-                    return jsonify({"error": "failed to add team stat"})
-                '''
             except Exception as e:
                 print(e)
                 db.session.rollback()
@@ -63,16 +53,6 @@ def create_league():
                 db.session.add(player)
                 try:
                     db.session.commit()
-                    '''
-                    player_stat = Player_Stat(season=2020, player=player)
-                    db.session.add(player_stat)
-                    try:
-                        db.session.commit()
-                    except Exception as e:
-                        print(e)
-                        db.session.rollback()
-                        return jsonify({"error": "failed to add player stat"})
-                    '''
                 except Exception as e:
                     print(e)
                     db.session.rollback()
@@ -90,16 +70,6 @@ def create_league():
                 db.session.add(pitcher)
                 try:
                     db.session.commit()
-                    '''
-                    player_stat = Player_Stat(season=2020, player=pitcher)
-                    db.session.add(player_stat)
-                    try:
-                        db.session.commit()
-                    except Exception as e:
-                        print(e)
-                        db.session.rollback()
-                        return jsonify({"error": "failed to add team stat"})
-                    '''
                 except Exception as e:
                     print(e)
                     db.session.rollback()
@@ -348,7 +318,6 @@ def simulate():
             print("------------------------")
             print(away_pitching)
             print(home_pitching)
-            '''
             # =============================================================================================================================
             team_stat = Team_Stat(at_bats=away_team_totals["AB"], hits=away_team_totals["H"], doubles=away_team_totals["2B"], triples=away_team_totals["3B"], homeruns=away_team_totals["HR"], rbi=away_team_totals["RBI"], team=team_2, game=game, season=season)
             db.session.add(team_stat)
@@ -396,5 +365,4 @@ def simulate():
                     print(e)
                     db.session.rollback()
                     return jsonify({"error": "failed to update player stats"})
-            '''
         return jsonify({"success": "games completed"})
