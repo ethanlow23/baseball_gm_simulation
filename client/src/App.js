@@ -3,7 +3,6 @@ import Navigation from './components/Navigation';
 import Home from './components/Home';
 import League from './components/League';
 import Team from './components/Team';
-import Stats from './components/Stats';
 
 function App() {
   return (
@@ -13,7 +12,6 @@ function App() {
         <Route path="/" component={Home} exact />
         <Route path="/league" component={League} />
         <Route path="/team" component={Team} />
-        <Route path="/stats" component={Stats} />
       </Switch>
     </div>
   );

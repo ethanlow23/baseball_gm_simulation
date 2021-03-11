@@ -1,0 +1,28 @@
+import { useState, useEffect } from 'react';
+
+function TeamSchedule() {
+  const [games, setGames] = useState([]);
+
+  useEffect(() => {
+    fetch('/teams/1')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.games[0]);
+        setGames(data.games);
+      })
+      .catch(error => console.log(error));
+  }, []);
+
+  return (
+    <div>
+      <h1>Team Schedule</h1>
+      <ul>
+        {games.map(game => 
+          <li key={game.id}>{game.game_number} vs {game.game_number}</li>
+        )}
+      </ul>
+    </div>
+  );
+}
+
+export default TeamSchedule;

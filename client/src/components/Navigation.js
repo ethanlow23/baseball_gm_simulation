@@ -7,7 +7,9 @@ function Navigation () {
       <Link to="/">Dashboard</Link>
       <Link to="/league">League</Link>
       <Link to="/team">My Team</Link>
-      <Link to="/stats">Stats</Link>
+      <Link to="/team/schedule">Schedule</Link>
+      <Link to="/team/players">Roster</Link>
+      <Link to="/team/stats">Team Stats</Link>
     </div>
   );
 }

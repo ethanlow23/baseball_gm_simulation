@@ -1,27 +1,28 @@
 import { useState, useEffect } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import TeamSchedule from './TeamSchedule';
+import TeamPlayers from './TeamPlayers';
+import TeamStats from './TeamStats';
 
 function Team() {
   const [team, setTeam] = useState({});
-  const [players, setPlayers] = useState([]);
+
   useEffect(() => {
-    fetch('teams')
+    fetch('/teams/1')
       .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setTeam(data[0]);
-        setPlayers(data[0].players);
-      })
+      .then(data => setTeam(data))
       .catch(error => console.log(error));
   }, []);
+
   return (
     <div>
       <h1>Team Information Page</h1>
       <h3>{team.city} {team.name}</h3>
-      <ul>
-        {players.map(player =>
-          <li>{player.first_name} {player.last_name}</li>
-        )}
-      </ul>
+      <Switch>
+        <Route path="/team/schedule" component={TeamSchedule} />
+        <Route path="/team/players" component={TeamPlayers} />
+        <Route path="/team/stats" component={TeamStats} />
+      </Switch>
     </div>
   );
 }
