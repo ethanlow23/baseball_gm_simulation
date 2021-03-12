@@ -98,66 +98,6 @@ def generate_schedule():
                     return jsonify({"error": "failed to schedule game"})
         return jsonify({"success": "generated schedule"})
 
-# GET ALL TEAMS
-@home_api.route('/teams')
-def teams():
-    all_teams = Team.query.all()
-    return jsonify([team.serialize() for team in all_teams])
-
-# GET A TEAM
-@home_api.route('/teams/<team_id>')
-def team(team_id):
-    team = Team.query.get(team_id)
-    return jsonify(team.serialize())
-
-# GET ALL GAMES
-@home_api.route('/games')
-def games():
-    all_games = Game.query.filter_by(game_number=1)
-    results = []
-    for game in all_games:
-        box_scores = {}
-        t1 = game.team_stats[0]
-        t1_city = t1.team.city
-        t1_score = t1.rbi
-        t1_team_stats = t1.serialize()
-        t1_player_stats = [player_stat.serialize() for player_stat in game.player_stats if player_stat.player.team == t1.team]
-        t2 = game.team_stats[1]
-        t2_city = t2.team.city
-        t2_score = t2.rbi
-        t2_team_stats = t2.serialize()
-        t2_player_stats = [player_stat.serialize() for player_stat in game.player_stats if player_stat.player.team == t2.team]
-        t1_box_score = {'score': t1_score, 'team stats': t1_team_stats, 'player stats': t1_player_stats}
-        box_scores[t1_city] = t1_box_score
-        t2_box_score = {'score': t2_score, 'team stats': t2_team_stats, 'player stats': t2_player_stats}
-        box_scores[t2_city] = t2_box_score
-        results.append(box_scores)
-    return jsonify(results)
-    '''
-    return jsonify([game.serialize() for game in all_games])
-    '''
-
-# GET A GAME
-@home_api.route('/games/<game_id>')
-def game(game_id):
-    game = Game.query.get(game_id)
-    box_score = {}
-    t1 = game.team_stats[0]
-    t1_city = t1.team.city
-    t1_score = t1.rbi
-    t1_team_stats = t1.serialize()
-    t1_player_stats = [player_stat.serialize() for player_stat in game.player_stats if player_stat.player.team == t1.team]
-    t2 = game.team_stats[1]
-    t2_city = t2.team.city
-    t2_score = t2.rbi
-    t2_team_stats = t2.serialize()
-    t2_player_stats = [player_stat.serialize() for player_stat in game.player_stats if player_stat.player.team == t2.team]
-    t1_box_score = {'score': t1_score, 'team stats': t1_team_stats, 'player stats': t1_player_stats}
-    box_score[t1_city] = t1_box_score
-    t2_box_score = {'score': t2_score, 'team stats': t2_team_stats, 'player stats': t2_player_stats}
-    box_score[t2_city] = t2_box_score
-    return jsonify(box_score)
-
 @home_api.route('/simulate', methods=['POST'])
 def simulate():
     if request.method == 'POST':
