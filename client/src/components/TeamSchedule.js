@@ -4,12 +4,9 @@ function TeamSchedule() {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
-    fetch('/teams/1')
+    fetch('/teams/1/schedule')
       .then(response => response.json())
-      .then(data => {
-        console.log(data.games[0]);
-        setGames(data.games);
-      })
+      .then(data => setGames(data))
       .catch(error => console.log(error));
   }, []);
 
@@ -18,7 +15,7 @@ function TeamSchedule() {
       <h1>Team Schedule</h1>
       <ul>
         {games.map(game => 
-          <li key={game.id}>{game.game_number} vs {game.game_number}</li>
+          <li>{game.team1.city} {game.team1.name} {game.team1_score} vs {game.team2.city} {game.team2.name} {game.team2_score}</li>
         )}
       </ul>
     </div>

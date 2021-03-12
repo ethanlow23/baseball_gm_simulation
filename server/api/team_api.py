@@ -45,7 +45,7 @@ def team_stats(team_id):
   players = Team.query.get(team_id).players
   stats = []
   for player in players:
-    player_stats = {'player': player.first_name + ' ' + player.last_name}
+    player_stats = {'player': player.serialize()}
     for log in player.player_stats:
       player_stats['AB'] = player_stats.get('AB', 0) + log.at_bats
       player_stats['H'] = player_stats.get('H', 0) + log.hits
