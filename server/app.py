@@ -168,8 +168,10 @@ class Player_Stat(db.Model):
 
 from api.home_api import home_api
 from api.team_api import team_api
+from api.player_api import player_api
 from api.game_api import game_api
 
 app.register_blueprint(home_api)
 app.register_blueprint(team_api, url_prefix='/teams')
+app.register_blueprint(player_api, url_prefix='/players')
 app.register_blueprint(game_api, url_prefix='/games')
