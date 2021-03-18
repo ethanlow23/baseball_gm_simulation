@@ -135,6 +135,7 @@ def simulate():
             while (away_outs < 27 or away_score == home_score):
                 inning += 1
                 while (half_inning == 0):
+                    result = runs = None
                     batter = away_lineup[away_plate_appearances % 9]
                     away_team_totals["AB"] += 1
                     away_box_score[away_plate_appearances % 9]["AB"] += 1
@@ -148,62 +149,46 @@ def simulate():
                         home_pitching["H"] += 1
                         if (pitch > 0 and pitch < swing * 0.15):
                             print("HOME RUN")
-                            away_team_totals["HR"] += 1
-                            away_box_score[away_plate_appearances % 9]["HR"] += 1
+                            result = "HR"
                             home_pitching["HR"] += 1
-                            rbi = first_base + second_base + third_base + 1
-                            away_team_totals["RBI"] += rbi
-                            away_box_score[away_plate_appearances % 9]["RBI"] += rbi
-                            home_pitching["R"] += rbi
-                            away_score += rbi
-                            first_base = 0
-                            second_base = 0
-                            third_base = 0
+                            runs = first_base + second_base + third_base + 1
+                            first_base = second_base = third_base = 0
                         elif (pitch > swing * 0.15 and pitch < (swing * 0.15) + (swing * 0.02)):
                             print("TRIPLE")
-                            away_team_totals["3B"] += 1
-                            away_box_score[away_plate_appearances % 9]["3B"] += 1
-                            rbi = first_base + second_base + third_base
-                            away_team_totals["RBI"] += rbi
-                            away_box_score[away_plate_appearances % 9]["RBI"] += rbi
-                            home_pitching["R"] += rbi
-                            away_score += rbi
-                            first_base = 0
-                            second_base = 0
-                            third_base = 0
+                            result = "3B"
+                            runs = first_base + second_base + third_base
+                            first_base = second_base = 0
+                            third_base = 1
                         elif (pitch > (swing * 0.15) + (swing * 0.02) and pitch < (swing * 0.15) + (swing * 0.02) + (swing * 0.22)):
                             print("DOUBLE")
-                            away_team_totals["2B"] += 1
-                            away_box_score[away_plate_appearances % 9]["2B"] += 1
-                            rbi = second_base + third_base
-                            away_team_totals["RBI"] += rbi
-                            away_box_score[away_plate_appearances % 9]["RBI"] += rbi
-                            home_pitching["R"] += rbi
-                            away_score += rbi
+                            result = "3B"
+                            runs = first_base + second_base + third_base
                             third_base = first_base
                             second_base = 1
                             first_base = 0
                         else:
                             print("SINGLE")
-                            rbi = third_base
-                            away_team_totals["RBI"] += rbi
-                            away_box_score[away_plate_appearances % 9]["RBI"] += rbi
-                            home_pitching["R"] += rbi
-                            away_score += rbi
+                            runs = third_base
                             third_base = second_base
                             second_base = first_base
                             first_base = 1
+                        if result:
+                            away_team_totals[result] += 1
+                            away_box_score[away_plate_appearances % 9][result] += 1
+                        away_team_totals["RBI"] += runs
+                        away_box_score[away_plate_appearances % 9]["RBI"] += runs
+                        home_pitching["R"] += runs
+                        away_score += runs
                     else:
                         print("OUT")
                         away_outs += 1
                         if (away_outs % 3 == 0):
                             home_pitching["IP"] += 1
                             half_inning = 1
-                first_base = 0
-                second_base = 0
-                third_base = 0
+                first_base = second_base = third_base = 0
                 print("End of top of inning " + str(inning))
                 while (half_inning == 1 and (home_outs < 24 or away_score >= home_score)):
+                    result = runs = None
                     batter = home_lineup[home_plate_appearances % 9]
                     home_team_totals["AB"] += 1
                     home_box_score[home_plate_appearances % 9]["AB"] += 1
@@ -217,60 +202,43 @@ def simulate():
                         away_pitching["H"] += 1
                         if (pitch > 0 and pitch < swing * 0.15):
                             print("HOME RUN")
-                            home_team_totals["HR"] += 1
-                            home_box_score[home_plate_appearances % 9]["HR"] += 1
+                            result = "HR"
                             away_pitching["HR"] += 1
-                            rbi = first_base + second_base + third_base + 1
-                            home_team_totals["RBI"] += rbi
-                            home_box_score[home_plate_appearances % 9]["RBI"] += rbi
-                            away_pitching["R"] += rbi
-                            home_score += rbi
-                            first_base = 0
-                            second_base = 0
-                            third_base = 0
+                            runs = first_base + second_base + third_base + 1
+                            first_base = second_base = third_base = 0
                         elif (pitch > swing * 0.15 and pitch < (swing * 0.15) + (swing * 0.02)):
                             print("TRIPLE")
-                            home_team_totals["3B"] += 1
-                            home_box_score[home_plate_appearances % 9]["3B"] += 1
-                            rbi = first_base + second_base + third_base
-                            home_team_totals["RBI"] += rbi
-                            home_box_score[home_plate_appearances % 9]["RBI"] += rbi
-                            away_pitching["R"] += rbi
-                            home_score += rbi
-                            first_base = 0
-                            second_base = 0
-                            third_base = 0
+                            result = "3B"
+                            runs = first_base + second_base + third_base
+                            first_base = second_base = 0
+                            third_base = 1
                         elif (pitch > (swing * 0.15) + (swing * 0.02) and pitch < (swing * 0.15) + (swing * 0.02) + (swing * 0.22)):
                             print("DOUBLE")
-                            home_team_totals["2B"] += 1
-                            home_box_score[home_plate_appearances % 9]["2B"] += 1
-                            rbi = second_base + third_base
-                            home_team_totals["RBI"] += rbi
-                            home_box_score[home_plate_appearances % 9]["RBI"] += rbi
-                            away_pitching["R"] += rbi
-                            home_score += rbi
+                            result = "2B"
+                            runs = second_base + third_base
                             third_base = first_base
                             second_base = 1
                             first_base = 0
                         else:
                             print("SINGLE")
-                            rbi = third_base
-                            home_team_totals["RBI"] += rbi
-                            home_box_score[home_plate_appearances % 9]["RBI"] += rbi
-                            away_pitching["R"] += rbi
-                            home_score += rbi
+                            runs = third_base
                             third_base = second_base
                             second_base = first_base
                             first_base = 1
+                        if result:
+                            home_team_totals[result] += 1
+                            home_box_score[home_plate_appearances % 9][result] += 1
+                        home_team_totals["RBI"] += runs
+                        home_box_score[home_plate_appearances % 9]["RBI"] += runs
+                        away_pitching["R"] += runs
+                        home_score += runs
                     else:
                         print("OUT")
                         home_outs += 1
                         if (home_outs % 3 == 0):
                             away_pitching["IP"] += 1
                             half_inning = 0
-                first_base = 0
-                second_base = 0
-                third_base = 0
+                first_base = second_base = third_base = 0
                 print("End of inning " + str(inning))
             print("------------------------")
             print("End of game")
@@ -288,6 +256,7 @@ def simulate():
             print(away_pitching)
             print(home_pitching)
             # =============================================================================================================================
+            '''
             team_stat = Team_Stat(at_bats=away_team_totals["AB"], hits=away_team_totals["H"], doubles=away_team_totals["2B"], triples=away_team_totals["3B"], homeruns=away_team_totals["HR"], rbi=away_team_totals["RBI"], team=team_2, game=game, season=season)
             db.session.add(team_stat)
             try:
@@ -334,4 +303,5 @@ def simulate():
                     print(e)
                     db.session.rollback()
                     return jsonify({"error": "failed to update player stats"})
+            '''
         return jsonify({"success": "games completed"})
