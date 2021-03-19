@@ -15,7 +15,7 @@ function TeamPlayers() {
       <h1>Team Players</h1>
       <ul>
         {players.map(player =>
-          <li key={player.id}><Link to="/player">{player.first_name} {player.last_name}</Link></li>
+          <li key={player.id}><Link to={"/player/" + player.id}>{player.first_name} {player.last_name}</Link></li>
         )}
       </ul>
     </div>

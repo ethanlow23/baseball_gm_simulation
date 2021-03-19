@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function PlayerLog() {
+  const { player_id } = useParams();
   const [log, setLog] = useState([]);
 
   useEffect(() => {
-    fetch('/players/1/log')
+    fetch('/players/' + player_id + '/log')
       .then(response => response.json())
-      .then(data => {
-        setLog(data.games);
-      })
+      .then(data => setLog(data.games))
       .catch(error => console.log(error));
   }, []);
 
@@ -32,7 +31,7 @@ function PlayerLog() {
         <tbody>
           {log.map(game => 
             <tr>
-              <td><Link to="/games">{game.game_teams[0].city} {game.game_teams[0].name} vs {game.game_teams[1].city} {game.game_teams[1].name}</Link></td>
+              <td><Link to={"/game/" + game.game_id}>{game.game_teams[0].city} {game.game_teams[0].name} vs {game.game_teams[1].city} {game.game_teams[1].name}</Link></td>
               <td>{game.stats.at_bats}</td>
               <td>{game.stats.hits}</td>
               <td>{game.stats.homeruns}</td>

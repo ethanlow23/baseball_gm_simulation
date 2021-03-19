@@ -30,7 +30,7 @@ function TeamStats() {
         <tbody>
           {stats.map(stat => 
             <tr>
-              <td><Link to="/player">{stat.player.first_name} {stat.player.last_name}</Link></td>
+              <td><Link to={"/player/" + stat.player.id}>{stat.player.first_name} {stat.player.last_name}</Link></td>
               <td>{stat.AB}</td>
               <td>{stat.H}</td>
               <td>{stat.HR}</td>

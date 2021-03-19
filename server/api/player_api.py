@@ -16,6 +16,7 @@ def player_log(player_id):
   player_info = {'name': player.first_name + ' ' + player.last_name, 'team': player.team.city + ' ' + player.team.name, 'games': []}
   for log in player.player_stats:
     info = {}
+    info['game_id'] = log.game.id
     info['game_teams'] = [team.serialize() for team in log.game.teams]
     info['stats'] = log.serialize()
     player_info['games'].append(info)
