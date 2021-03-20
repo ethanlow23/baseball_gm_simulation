@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function Game() {
   const { game_id } = useParams();
@@ -42,7 +42,7 @@ function Game() {
         <tbody>
           {t1PlayerStats.map(stat =>
             <tr>
-              <td>{stat.player_id}</td>
+              <td><Link to={"/player/" + stat.player_id}>{stat.player_id}</Link></td>
               <td>{stat.at_bats}</td>
               <td>{stat.hits}</td>
               <td>{stat.homeruns}</td>
@@ -96,7 +96,7 @@ function Game() {
         <tbody>
           {t2PlayerStats.map(stat =>
             <tr>
-              <td>{stat.player_id}</td>
+              <td><Link to={"/player/" + stat.player_id}>{stat.player_id}</Link></td>
               <td>{stat.at_bats}</td>
               <td>{stat.hits}</td>
               <td>{stat.homeruns}</td>
