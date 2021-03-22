@@ -27,11 +27,6 @@ class Season(db.Model):
             "games": [game.serialize() for game in self.games]
         }
 
-game_teams = db.Table('game_teams',
-    db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True),
-    db.Column('team_id', db.Integer, db.ForeignKey('team.id'), primary_key=True)
-)
-
 game_players = db.Table('game_players',
     db.Column('game_id', db.Integer, db.ForeignKey('game.id'), primary_key=True),
     db.Column('player_id', db.Integer, db.ForeignKey('player.id'), primary_key=True)
@@ -44,7 +39,8 @@ class Team(db.Model):
     season_id = db.Column(db.Integer, db.ForeignKey('season.id'), nullable=False)
     players = db.relationship('Player', backref='team')
     team_stats = db.relationship('Team_Stat', backref='team')
-    games = db.relationship('Game', secondary=game_teams, backref='teams')
+    home_games = db.relationship('Game', foreign_keys='Game.home_id', backref='home')
+    away_games = db.relationship('Game', foreign_keys='Game.away_id', backref='away')
 
     def serialize(self):
         return {
@@ -54,7 +50,8 @@ class Team(db.Model):
             "season_id": self.season_id,
             "players": [player.serialize() for player in self.players],
             "team_stats": [team_stat.serialize() for team_stat in self.team_stats],
-            "games": [game.serialize() for game in self.games]
+            "home_games": [game.serialize() for game in self.home_games],
+            "away_games": [game.serialize() for game in self.away_games]
         }
 
 class Player(db.Model):
@@ -90,9 +87,9 @@ class Game(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     game_number = db.Column(db.Integer, nullable=False)
     season_id = db.Column(db.Integer, db.ForeignKey('season.id'), nullable=False)
-    # teams = db.relationship('Team', secondary=game_teams, backref='games')
+    home_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
+    away_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
     team_stats = db.relationship('Team_Stat', backref='game')
-    # players = db.relationship('Player', secondary=game_players, backref='games')
     player_stats = db.relationship('Player_Stat', backref='game')
     
     def serialize(self):
@@ -100,9 +97,9 @@ class Game(db.Model):
             "id": self.id,
             "game_number": self.game_number,
             "season_id": self.season_id,
-            # "teams": [team.serialize() for team in self.teams],
+            "home_id": self.home_id,
+            "away_id": self.away_id,
             "team_stats": [team_stat.serialize() for team_stat in self.team_stats],
-            # "players": [player.serialize() for player in self.players],
             "player_stats": [player_stat.serialize() for player_stat in self.player_stats]
         }
 
@@ -110,8 +107,6 @@ class Team_Stat(db.Model):
     __tablename__ = "team_stat"
 
     id = db.Column(db.Integer, primary_key=True)
-    # wins = db.Column(db.Integer, nullable=False, default=0)
-    # losses = db.Column(db.Integer, nullable=False, default=0)
     at_bats = db.Column(db.Integer, nullable=False, default=0)
     hits = db.Column(db.Integer, nullable=False, default=0)
     doubles = db.Column(db.Integer, nullable=False, default=0)
@@ -125,8 +120,6 @@ class Team_Stat(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            # "wins": self.wins,
-            # "losses": self.losses,
             "at_bats": self.at_bats,
             "hits": self.hits,
             "doubles": self.doubles,

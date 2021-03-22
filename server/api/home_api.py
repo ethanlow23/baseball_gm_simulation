@@ -80,15 +80,13 @@ def create_league():
 @home_api.route('/schedule', methods=['POST'])
 def generate_schedule():
     if request.method == 'POST':
-        teams = Season.query.get(1).teams
+        season = Season.query.get(1)
+        teams = season.teams
         for i in range(1, len(teams)):
             teams = teams[:1] + teams[len(teams) - 1:] + teams[1:len(teams) - 1]
             for j in range(int(len(teams) / 2)):
-                season = Season.query.get(1)
                 game_number = str(i)
-                game = Game(game_number=game_number, season=season)
-                game.teams.append(teams[j])
-                game.teams.append(teams[len(teams) - 1 - j])
+                game = Game(game_number=game_number, season=season, home=teams[j], away=teams[len(teams) - 1 - j])
                 db.session.add(game)
                 try:
                     db.session.commit()
@@ -108,12 +106,10 @@ def simulate():
         game_number = 1
         games = Game.query.filter_by(season=season).filter_by(game_number=game_number)
         for game in games:
-            team_1 = game.teams[0]
-            team_2 = game.teams[1]
-            home_lineup = Player.query.filter_by(team_id=team_1.id).filter(Player.position != "SP")
-            home_pitcher = Player.query.filter_by(team_id=team_1.id).filter(Player.position == "SP")[(game_number - 1) % 5]
-            away_lineup = Player.query.filter_by(team_id=team_2.id).filter(Player.position != "SP")
-            away_pitcher = Player.query.filter_by(team_id=team_2.id).filter(Player.position == "SP")[(game_number - 1) % 5]
+            home_lineup = Player.query.filter_by(team_id=game.home.id).filter(Player.position != "SP")
+            home_pitcher = Player.query.filter_by(team_id=game.home.id).filter(Player.position == "SP")[(game_number - 1) % 5]
+            away_lineup = Player.query.filter_by(team_id=game.away.id).filter(Player.position != "SP")
+            away_pitcher = Player.query.filter_by(team_id=game.away.id).filter(Player.position == "SP")[(game_number - 1) % 5]
             # GAME SIMULATION CODE
             # =============================================================================================================================
             away_score = home_score = half_inning = inning = away_outs = home_outs = first_base = second_base = third_base = away_plate_appearances = home_plate_appearances = 0
@@ -256,8 +252,7 @@ def simulate():
             print(away_pitching)
             print(home_pitching)
             # =============================================================================================================================
-            '''
-            team_stat = Team_Stat(at_bats=away_team_totals["AB"], hits=away_team_totals["H"], doubles=away_team_totals["2B"], triples=away_team_totals["3B"], homeruns=away_team_totals["HR"], rbi=away_team_totals["RBI"], team=team_2, game=game, season=season)
+            team_stat = Team_Stat(at_bats=away_team_totals["AB"], hits=away_team_totals["H"], doubles=away_team_totals["2B"], triples=away_team_totals["3B"], homeruns=away_team_totals["HR"], rbi=away_team_totals["RBI"], team=game.away, game=game, season=season)
             db.session.add(team_stat)
             try:
                 db.session.commit()
@@ -265,7 +260,7 @@ def simulate():
                 print(e)
                 db.session.rollback()
                 return jsonify({"error": "failed to update team stats"})
-            team_stat = Team_Stat(at_bats=home_team_totals["AB"], hits=home_team_totals["H"], doubles=home_team_totals["2B"], triples=home_team_totals["3B"], homeruns=home_team_totals["HR"], rbi=home_team_totals["RBI"], team=team_1, game=game, season=season)
+            team_stat = Team_Stat(at_bats=home_team_totals["AB"], hits=home_team_totals["H"], doubles=home_team_totals["2B"], triples=home_team_totals["3B"], homeruns=home_team_totals["HR"], rbi=home_team_totals["RBI"], team=game.home, game=game, season=season)
             db.session.add(team_stat)
             try:
                 db.session.commit()
@@ -303,5 +298,4 @@ def simulate():
                     print(e)
                     db.session.rollback()
                     return jsonify({"error": "failed to update player stats"})
-            '''
         return jsonify({"success": "games completed"})
