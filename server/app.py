@@ -41,6 +41,8 @@ class Team(db.Model):
     team_stats = db.relationship('Team_Stat', backref='team')
     home_games = db.relationship('Game', foreign_keys='Game.home_id', backref='home')
     away_games = db.relationship('Game', foreign_keys='Game.away_id', backref='away')
+    # home_score = db.Column(db.Integer, nullable=False, default=0)
+    # away_score = db.Column(db.Integer, nullable=False, default=0)
 
     def serialize(self):
         return {

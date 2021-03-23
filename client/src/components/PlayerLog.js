@@ -31,7 +31,7 @@ function PlayerLog() {
         <tbody>
           {log.map(game => 
             <tr>
-              <td><Link to={"/game/" + game.game_id}>{game.game_teams[0].city} {game.game_teams[0].name} vs {game.game_teams[1].city} {game.game_teams[1].name}</Link></td>
+              <td><Link to={"/game/" + game.game_id}>{game.away_team.city} {game.away_team.name} vs {game.home_team.city} {game.home_team.name}</Link></td>
               <td>{game.stats.at_bats}</td>
               <td>{game.stats.hits}</td>
               <td>{game.stats.homeruns}</td>

@@ -40,6 +40,22 @@ def games_number(game_number):
 @game_api.route('/<game_id>')
 def game(game_id):
     game = Game.query.get(game_id)
+    game_info = {'away': '{} {}'.format(game.away.city, game.away.name), 'home': '{} {}'.format(game.home.city, game.home.name), 'away_player_stats': [], 'home_player_stats': []}
+    for team_stat in game.team_stats:
+        if team_stat.team == game.away:
+            game_info['away_score'] = team_stat.rbi
+            game_info['away_team_stats'] = team_stat.serialize()
+        else:
+            game_info['home_score'] = team_stat.rbi
+            game_info['home_team_stats'] = team_stat.serialize()
+    for player_stat in game.player_stats:
+        player_info = {'name': '{} {}'.format(player_stat.player.first_name, player_stat.player.last_name), 'stats': player_stat.serialize()}
+        if player_stat.player.team == game.away:
+            game_info['away_player_stats'].append(player_info)
+        else:
+            game_info['home_player_stats'].append(player_info) 
+    return jsonify(game_info)
+    '''
     box_score = {}
     t1 = game.team_stats[0]
     t1_team = '{} {}'.format(t1.team.city, t1.team.name)
@@ -60,3 +76,4 @@ def game(game_id):
     box_score['t2_team_stats'] = t2_team_stats
     box_score['t2_player_stats'] = t2_player_stats
     return jsonify(box_score)
+    '''

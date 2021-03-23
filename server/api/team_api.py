@@ -18,19 +18,11 @@ def team(team_id):
 # GET A TEAM'S SCHEDULE
 @team_api.route('/<team_id>/schedule')
 def team_games(team_id):
-  team_games = Team.query.get(team_id).games
+  team_games = Game.query.filter((Game.home_id==team_id) | (Game.away_id==team_id))
   games = []
   for game in team_games:
-      result = {}
-      result['team1'] = game.teams[0].serialize()
-      result['team2'] = game.teams[1].serialize()
-      if game.team_stats:
-        result['team1_score'] = game.team_stats[0].rbi
-        result['team2_score'] = game.team_stats[1].rbi
-      else:
-        result['team1_score'] = 0
-        result['team2_score'] = 0
-      games.append(result)
+    game_info = {'id': game.id, 'game_number': game.game_number, 'home_team': '{} {}'.format(game.home.city, game.home.name), 'away_team': '{} {}'.format(game.away.city, game.away.name)}
+    games.append(game_info)
   return jsonify(games)
 
 # GET A TEAM'S ROSTER

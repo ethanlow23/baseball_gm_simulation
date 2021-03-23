@@ -15,7 +15,7 @@ function TeamSchedule() {
       <h1>Team Schedule</h1>
       <ul>
         {games.map(game => 
-          <li>{game.team1.city} {game.team1.name} {game.team1_score} vs {game.team2.city} {game.team2.name} {game.team2_score}</li>
+          <li key={game.id}>{game.game_number}. {game.away_team} vs {game.home_team}</li>
         )}
       </ul>
     </div>

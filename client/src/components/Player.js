@@ -17,7 +17,7 @@ function Player() {
     <div>
       <h1>Player Information</h1>
       <Link to={"/player/" + player_id + "/log"}>Game Log</Link>
-      <p>{player.first_name} {player.last_name}</p>
+      <h3>{player.first_name} {player.last_name}</h3>
       <Switch>
         <Route path="/player/:player_id/log" component={PlayerLog} />
       </Switch>

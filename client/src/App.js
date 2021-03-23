@@ -1,4 +1,5 @@
 import { Switch, Route } from 'react-router-dom';
+import Navigation from './components/Navigation';
 import Home from './components/Home';
 import League from './components/League';
 import Team from './components/Team';
@@ -8,6 +9,7 @@ import Game from './components/Game';
 function App() {
   return (
     <div className="App">
+      <Navigation />
       <Switch>
         <Route path="/" component={Home} exact />
         <Route path="/league" component={League} />

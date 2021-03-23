@@ -13,11 +13,12 @@ def player(player_id):
 @player_api.route('/<player_id>/log')
 def player_log(player_id):
   player = Player.query.get(player_id)
-  player_info = {'name': player.first_name + ' ' + player.last_name, 'team': player.team.city + ' ' + player.team.name, 'games': []}
+  player_info = {'name': '{} {}'.format(player.first_name,player.last_name), 'team': player.team.city + ' ' + player.team.name, 'games': []}
   for log in player.player_stats:
     info = {}
     info['game_id'] = log.game.id
-    info['game_teams'] = [team.serialize() for team in log.game.teams]
+    info['away_team'] = log.game.away.serialize()
+    info['home_team'] = log.game.home.serialize()
     info['stats'] = log.serialize()
     player_info['games'].append(info)
   return jsonify(player_info)
