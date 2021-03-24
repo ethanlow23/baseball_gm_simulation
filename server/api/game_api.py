@@ -49,7 +49,7 @@ def game(game_id):
             game_info['home_score'] = team_stat.rbi
             game_info['home_team_stats'] = team_stat.serialize()
     for player_stat in game.player_stats:
-        player_info = {'name': '{} {}'.format(player_stat.player.first_name, player_stat.player.last_name), 'stats': player_stat.serialize()}
+        player_info = {'id': player_stat.player.id, 'name': '{} {}'.format(player_stat.player.first_name, player_stat.player.last_name), 'stats': player_stat.serialize()}
         if player_stat.player.team == game.away:
             game_info['away_player_stats'].append(player_info)
         else:

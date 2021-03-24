@@ -42,7 +42,7 @@ function Game() {
         <tbody>
           {awayPlayerStats.map(player =>
             <tr>
-              <td><Link to={"/player/" + player.player_id}>{player.name}</Link></td>
+              <td><Link to={"/player/" + player.id}>{player.name}</Link></td>
               <td>{player.stats.at_bats}</td>
               <td>{player.stats.hits}</td>
               <td>{player.stats.homeruns}</td>
@@ -96,7 +96,7 @@ function Game() {
         <tbody>
           {homePlayerStats.map(player =>
             <tr>
-              <td><Link to={"/player/" + player.player_id}>{player.name}</Link></td>
+              <td><Link to={"/player/" + player.id}>{player.name}</Link></td>
               <td>{player.stats.at_bats}</td>
               <td>{player.stats.hits}</td>
               <td>{player.stats.homeruns}</td>
