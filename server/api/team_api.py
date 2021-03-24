@@ -3,12 +3,6 @@ from app import db, Season, Team, Player, Game, Team_Stat, Player_Stat
 
 team_api = Blueprint('team_api', __name__)
 
-# GET ALL TEAMS
-@team_api.route('/')
-def teams():
-    all_teams = Team.query.all()
-    return jsonify([team.serialize() for team in all_teams])
-
 # GET A TEAM
 @team_api.route('/<team_id>')
 def team(team_id):
