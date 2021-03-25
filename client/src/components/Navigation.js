@@ -2,8 +2,12 @@ import { Link } from 'react-router-dom';
 
 function Navigation () {
   const simGames = (e) => {
-    alert('I want to simulate games');
-  }
+    fetch('/simulate', {method: 'POST'})
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.log(error))
+  };
+  
   return (
     <div>
       <h1>Navigation Bar</h1>

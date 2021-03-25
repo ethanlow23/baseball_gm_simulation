@@ -8,7 +8,7 @@ function LeagueTeams() {
       .then(response => response.json())
       .then(data => setTeams(data))
       .catch(error => console.log(error));
-  });
+  }, []);
 
   return (
     <div>

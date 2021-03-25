@@ -5,7 +5,7 @@ function Home() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    setMessage("Welcome to baseball gm simulation")
+    setMessage("Welcome to baseball gm simulation");
   }, []);
 
   const createLeague = (e) => {

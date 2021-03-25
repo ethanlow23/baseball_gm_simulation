@@ -6,7 +6,7 @@ game_api = Blueprint('game_api', __name__)
 # GET ALL GAMES
 @game_api.route('/')
 def games():
-    all_games = Game.query.all()
+    all_games = Game.query.filter(Game.team_stats.any())
     return jsonify([game.serialize() for game in all_games])
 
 # GET ALL GAMES BY GAME NUMBER
