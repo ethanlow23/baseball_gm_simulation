@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 function Home() {
   const [message, setMessage] = useState('');
@@ -15,7 +16,7 @@ function Home() {
   return (
     <div>
       <h1>HOME</h1>
-      <p>{message}</p>
+      <Button>{message}</Button>
       <Link to="/league" onClick={createLeague}>CREATE A LEAGUE</Link>
     </div>
   );

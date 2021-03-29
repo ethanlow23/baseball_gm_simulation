@@ -25,3 +25,7 @@ def stats():
       stats['RBI'] = stats.get('RBI', 0) + stat.rbi
     teams_stats.append(stats)
   return jsonify(teams_stats)
+
+@league_api.route('/leaders')
+def leaders():
+  return {'hello': 'world'}
