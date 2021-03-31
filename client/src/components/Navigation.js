@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Navbar, Nav, NavDropdown, Form, FormControl, Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 
 function Navigation () {
   const simGames = (e) => {
@@ -10,23 +11,25 @@ function Navigation () {
   
   return (
     <div>
-      <h1>Navigation Bar</h1>
-      <button onClick={simGames}>Play</button>
-      <div>
-        <Link to="/">Dashboard</Link>
-      </div>
-      <div>
-        <Link to="/league">League</Link>
-        <Link to="/league/teams">Teams</Link>
-        <Link to="/league/leaders">League Leaders</Link>
-        <Link to="/league/stats">Team Stats</Link>
-      </div>
-      <div>
-        <Link to="/team">My Team</Link>
-        <Link to="/team/schedule">Schedule</Link>
-        <Link to="/team/players">Roster</Link>
-        <Link to="/team/stats">Team Stats</Link>
-      </div>
+      <Navbar bg="light" expand="lg">
+        <Navbar.Brand>Baseball GM Simulator</Navbar.Brand>
+          <Nav>
+            <Button onClick={simGames}>Play</Button>
+            <Nav.Link as={Link} to="/">Dashboard</Nav.Link>
+            <NavDropdown title="League">
+              <NavDropdown.Item as={Link} to="/league">Overview</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/league/teams">Teams</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/league/leaders">League Leaders</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/league/stats">Stats</NavDropdown.Item>
+            </NavDropdown>
+            <NavDropdown title="Team">
+              <NavDropdown.Item as={Link} to="/team">My Team</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/team/schedule">Schedule</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/team/players">Roster</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/team/stats">Team Stats</NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+      </Navbar>
     </div>
   );
 }

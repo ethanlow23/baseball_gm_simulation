@@ -16,7 +16,7 @@ function Home() {
   return (
     <div>
       <h1>HOME</h1>
-      <Button>{message}</Button>
+      <h3>{message}</h3>
       <Link to="/league" onClick={createLeague}>CREATE A LEAGUE</Link>
     </div>
   );
