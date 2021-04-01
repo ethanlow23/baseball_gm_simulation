@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import TeamOverview from './TeamOverview';
 import TeamSchedule from './TeamSchedule';
 import TeamPlayers from './TeamPlayers';
 import TeamStats from './TeamStats';
@@ -22,6 +23,7 @@ function Team() {
         <h3>{team.city} {team.name}</h3>
       </Jumbotron>
       <Switch>
+        <Route path="/team" component={TeamOverview} exact />
         <Route path="/team/schedule" component={TeamSchedule} />
         <Route path="/team/players" component={TeamPlayers} />
         <Route path="/team/stats" component={TeamStats} />

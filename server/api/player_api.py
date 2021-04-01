@@ -22,3 +22,19 @@ def player_log(player_id):
     info['stats'] = log.serialize()
     player_info['games'].append(info)
   return jsonify(player_info)
+
+@player_api.route('/<player_id>/stats')
+def player_stats(player_id):
+  player = Player.query.get(player_id)
+  career_stats = {}
+  for log in player.player_stats:
+    if log.season.year not in career_stats:
+      career_stats[log.season.year] = {'AB': log.at_bats, 'H': log.hits, '2B': log.doubles, '3B': log.triples, 'HR': log.homeruns, 'RBI': log.rbi}
+    else:
+      career_stats[log.season.year]['AB'] += log.at_bats
+      career_stats[log.season.year]['H'] += log.hits
+      career_stats[log.season.year]['2B'] += log.doubles
+      career_stats[log.season.year]['3B'] += log.triples
+      career_stats[log.season.year]['HR'] += log.homeruns
+      career_stats[log.season.year]['RBI'] += log.rbi
+  return jsonify(career_stats)
