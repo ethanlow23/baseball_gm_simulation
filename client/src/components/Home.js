@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 function Home() {
   const [message, setMessage] = useState('');
@@ -21,7 +21,9 @@ function Home() {
 
   return (
     <div>
-      <h1>{message}</h1>
+      <Jumbotron>
+        <h1>{message}</h1>
+      </Jumbotron>
       <Button disabled={isLoading} onClick={createLeague}>
         {isLoading ? 'Creating...' : 'Create A League'}
       </Button>

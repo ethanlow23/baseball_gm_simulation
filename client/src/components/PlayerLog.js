@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import Table from 'react-bootstrap/Table';
 
 function PlayerLog() {
   const { player_id } = useParams();
@@ -10,12 +11,12 @@ function PlayerLog() {
       .then(response => response.json())
       .then(data => setLog(data.games))
       .catch(error => console.log(error));
-  }, []);
+  }, [player_id]);
 
   return (
     <div>
       <h1>Player Log</h1>
-      <table>
+      <Table striped bordered hover size="sm">
         <thead>
           <tr>
             <th>Game</th>
@@ -30,7 +31,7 @@ function PlayerLog() {
         </thead>
         <tbody>
           {log.map(game => 
-            <tr>
+            <tr key={game.game_id}>
               <td><Link to={"/game/" + game.game_id}>{game.away_team.city} {game.away_team.name} vs {game.home_team.city} {game.home_team.name}</Link></td>
               <td>{game.stats.at_bats}</td>
               <td>{game.stats.hits}</td>
@@ -42,7 +43,7 @@ function PlayerLog() {
             </tr>
           )}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 }

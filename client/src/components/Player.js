@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Switch, Route, Link, useParams } from 'react-router-dom';
 import PlayerLog from './PlayerLog';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 function Player() {
   const { player_id } = useParams();
@@ -11,13 +12,17 @@ function Player() {
       .then(response => response.json())
       .then(data => {setPlayer(data)})
       .catch(error => console.log(error));
-  }, []);
+  }, [player_id]);
 
   return (
     <div>
-      <h1>Player Information</h1>
+      <Jumbotron>
+        <h1>Player Information</h1>
+        <h3>{player.first_name} {player.last_name}</h3>
+      </Jumbotron>
+      <Link to={"/player/" + player_id}>Player</Link>
       <Link to={"/player/" + player_id + "/log"}>Game Log</Link>
-      <h3>{player.first_name} {player.last_name}</h3>
+      <Link to={"/player/" + player_id + "/log"}>Stats</Link>
       <Switch>
         <Route path="/player/:player_id/log" component={PlayerLog} />
       </Switch>

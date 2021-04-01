@@ -20,7 +20,7 @@ function Game() {
         setHomePlayerStats(data.home_player_stats);
       })
       .catch(error => console.log(error));
-  }, []);
+  }, [game_id]);
 
   return (
     <div>

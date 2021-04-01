@@ -2,11 +2,14 @@ import { Switch, Route } from 'react-router-dom';
 import LeagueTeams from './LeagueTeams';
 import LeagueLeaders from './LeagueLeaders';
 import LeagueStats from './LeagueStats';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 function League() {
   return (
     <div>
-      <h1>League</h1>
+      <Jumbotron>
+        <h1>League</h1>
+      </Jumbotron>
       <Switch>
         <Route path="/league/teams" component={LeagueTeams} />
         <Route path="/league/leaders" component={LeagueLeaders} />

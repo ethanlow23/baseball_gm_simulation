@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import TeamSchedule from './TeamSchedule';
 import TeamPlayers from './TeamPlayers';
 import TeamStats from './TeamStats';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 function Team() {
   const [team, setTeam] = useState({});
@@ -16,8 +17,10 @@ function Team() {
 
   return (
     <div>
-      <h1>Team Information Page</h1>
-      <h3>{team.city} {team.name}</h3>
+      <Jumbotron>
+        <h1>Team Information Page</h1>
+        <h3>{team.city} {team.name}</h3>
+      </Jumbotron>
       <Switch>
         <Route path="/team/schedule" component={TeamSchedule} />
         <Route path="/team/players" component={TeamPlayers} />
