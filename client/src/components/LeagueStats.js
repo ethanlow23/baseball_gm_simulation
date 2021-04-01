@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Table from 'react-bootstrap/Table';
 
 function LeagueStats () {
   const [teamsStats, setTeamsStats] = useState([]);
@@ -13,7 +14,7 @@ function LeagueStats () {
   return (
     <div>
       <h1>League Stats</h1>
-      <table>
+      <Table striped bordered hover size="sm">
         <thead>
           <tr>
             <th>Team</th>
@@ -40,7 +41,7 @@ function LeagueStats () {
             </tr>
           )}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 }

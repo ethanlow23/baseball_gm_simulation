@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 function LeagueTeams() {
   const [teams, setTeams] = useState([]);
@@ -13,11 +14,11 @@ function LeagueTeams() {
   return (
     <div>
       <h1>League Teams</h1>
-      <ul>
+      <ListGroup>
         {teams.map(team => 
-          <li key={team.id}>{team.city} {team.name}</li>
+          <ListGroup.Item key={team.id}>{team.city} {team.name}</ListGroup.Item>
         )}
-      </ul>
+      </ListGroup>
     </div>
   );
 }
