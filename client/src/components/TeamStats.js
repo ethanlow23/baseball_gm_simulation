@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import Table from 'react-bootstrap/Table';
 
 function TeamStats() {
   const [stats, setStats] = useState([]);
@@ -14,7 +15,7 @@ function TeamStats() {
   return (
     <div>
       <h1>Team Stats</h1>
-      <table>
+      <Table striped bordered hover size="sm">
         <thead>
           <tr>
             <th>Player</th>
@@ -29,7 +30,7 @@ function TeamStats() {
         </thead>
         <tbody>
           {stats.map(stat => 
-            <tr>
+            <tr key={stat.player.id}>
               <td><Link to={"/player/" + stat.player.id}>{stat.player.first_name} {stat.player.last_name}</Link></td>
               <td>{stat.AB}</td>
               <td>{stat.H}</td>
@@ -41,7 +42,7 @@ function TeamStats() {
             </tr>
           )}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 }

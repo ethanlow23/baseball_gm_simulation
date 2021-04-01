@@ -29,7 +29,7 @@ function LeagueStats () {
         </thead>
         <tbody>
           {teamsStats.map(stat => 
-            <tr>
+            <tr key={stat.team.id}>
               <td>{stat.team.city} {stat.team.name}</td>
               <td>{stat.AB}</td>
               <td>{stat.H}</td>

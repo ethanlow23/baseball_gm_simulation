@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import ListGroup from 'react-bootstrap/ListGroup';
+import Table from 'react-bootstrap/Table';
 
 function TeamSchedule() {
   const [games, setGames] = useState([]);
@@ -13,11 +15,24 @@ function TeamSchedule() {
   return (
     <div>
       <h1>Team Schedule</h1>
-      <ul>
-        {games.map(game => 
-          <li key={game.id}>{game.game_number}. {game.away_team} vs {game.home_team}</li>
-        )}
-      </ul>
+      <Table striped bordered hover size="sm">
+        <thead>
+          <tr>
+            <th>Game No.</th>
+            <th>Away</th>
+            <th>Home</th>
+          </tr>
+        </thead>
+        <tbody>
+          {games.map(game => 
+            <tr key={game.id}>
+              <td>{game.game_number}</td>
+              <td>{game.away_team}</td>
+              <td>{game.home_team}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </div>
   );
 }
