@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import Jumbotron from 'react-bootstrap/Jumbotron';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Table from 'react-bootstrap/Table';
 
 function Game() {
   const { game_id } = useParams();
@@ -24,116 +28,126 @@ function Game() {
 
   return (
     <div>
-      <h1>Game Information</h1>
-      <h3>{gameInfo.away} {gameInfo.away_score} - {gameInfo.home_score} {gameInfo.home}</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>AB</th>
-            <th>H</th>
-            <th>HR</th>
-            <th>2B</th>
-            <th>3B</th>
-            <th>RBI</th>
-            <th>AVG</th>
-          </tr>
-        </thead>
-        <tbody>
-          {awayPlayerStats.map(player =>
-            <tr>
-              <td><Link to={"/player/" + player.id}>{player.name}</Link></td>
-              <td>{player.stats.at_bats}</td>
-              <td>{player.stats.hits}</td>
-              <td>{player.stats.homeruns}</td>
-              <td>{player.stats.doubles}</td>
-              <td>{player.stats.triples}</td>
-              <td>{player.stats.rbi}</td>
-              <td>{(player.stats.hits / player.stats.at_bats).toFixed(3)}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      <table>
-        <thead>
-          <tr>
-            <th>Team</th>
-            <th>AB</th>
-            <th>H</th>
-            <th>HR</th>
-            <th>2B</th>
-            <th>3B</th>
-            <th>RBI</th>
-            <th>AVG</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{gameInfo.away}</td>
-            <td>{awayTeamStats.at_bats}</td>
-            <td>{awayTeamStats.hits}</td>
-            <td>{awayTeamStats.homeruns}</td>
-            <td>{awayTeamStats.doubles}</td>
-            <td>{awayTeamStats.triples}</td>
-            <td>{awayTeamStats.rbi}</td>
-            <td>{(awayTeamStats.hits / awayTeamStats.at_bats).toFixed(3)}</td>
-          </tr>
-        </tbody>
-      </table>
-      <table>
-        <thead>
-          <tr>
-            <th>Player</th>
-            <th>AB</th>
-            <th>H</th>
-            <th>HR</th>
-            <th>2B</th>
-            <th>3B</th>
-            <th>RBI</th>
-            <th>AVG</th>
-          </tr>
-        </thead>
-        <tbody>
-          {homePlayerStats.map(player =>
-            <tr>
-              <td><Link to={"/player/" + player.id}>{player.name}</Link></td>
-              <td>{player.stats.at_bats}</td>
-              <td>{player.stats.hits}</td>
-              <td>{player.stats.homeruns}</td>
-              <td>{player.stats.doubles}</td>
-              <td>{player.stats.triples}</td>
-              <td>{player.stats.rbi}</td>
-              <td>{(player.stats.hits / player.stats.at_bats).toFixed(3)}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      <table>
-        <thead>
-          <tr>
-            <th>Team</th>
-            <th>AB</th>
-            <th>H</th>
-            <th>HR</th>
-            <th>2B</th>
-            <th>3B</th>
-            <th>RBI</th>
-            <th>AVG</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{gameInfo.home}</td>
-            <td>{homeTeamStats.at_bats}</td>
-            <td>{homeTeamStats.hits}</td>
-            <td>{homeTeamStats.homeruns}</td>
-            <td>{homeTeamStats.doubles}</td>
-            <td>{homeTeamStats.triples}</td>
-            <td>{homeTeamStats.rbi}</td>
-            <td>{(homeTeamStats.hits / homeTeamStats.at_bats).toFixed(3)}</td>
-          </tr>
-        </tbody>
-      </table>
+      <Jumbotron>
+        <h1>Game Information</h1>
+        <h3>{gameInfo.away} {gameInfo.away_score} - {gameInfo.home_score} {gameInfo.home}</h3>
+      </Jumbotron>
+      <h1>Batting</h1>
+      <Row>
+        <Col>
+          <Table striped bordered size="sm">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>AB</th>
+                <th>H</th>
+                <th>HR</th>
+                <th>2B</th>
+                <th>3B</th>
+                <th>RBI</th>
+                <th>AVG</th>
+              </tr>
+            </thead>
+            <tbody>
+              {awayPlayerStats.map(player =>
+                <tr>
+                  <td><Link to={"/player/" + player.id}>{player.name}</Link></td>
+                  <td>{player.stats.at_bats}</td>
+                  <td>{player.stats.hits}</td>
+                  <td>{player.stats.homeruns}</td>
+                  <td>{player.stats.doubles}</td>
+                  <td>{player.stats.triples}</td>
+                  <td>{player.stats.rbi}</td>
+                  <td>{(player.stats.hits / player.stats.at_bats).toFixed(3)}</td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+          <Table striped bordered size="sm">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th>AB</th>
+                <th>H</th>
+                <th>HR</th>
+                <th>2B</th>
+                <th>3B</th>
+                <th>RBI</th>
+                <th>AVG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{gameInfo.away}</td>
+                <td>{awayTeamStats.at_bats}</td>
+                <td>{awayTeamStats.hits}</td>
+                <td>{awayTeamStats.homeruns}</td>
+                <td>{awayTeamStats.doubles}</td>
+                <td>{awayTeamStats.triples}</td>
+                <td>{awayTeamStats.rbi}</td>
+                <td>{(awayTeamStats.hits / awayTeamStats.at_bats).toFixed(3)}</td>
+              </tr>
+            </tbody>
+          </Table>
+        </Col>
+        <Col>
+          <Table striped bordered size="sm">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>AB</th>
+                <th>H</th>
+                <th>HR</th>
+                <th>2B</th>
+                <th>3B</th>
+                <th>RBI</th>
+                <th>AVG</th>
+              </tr>
+            </thead>
+            <tbody>
+              {homePlayerStats.map(player =>
+                <tr>
+                  <td><Link to={"/player/" + player.id}>{player.name}</Link></td>
+                  <td>{player.stats.at_bats}</td>
+                  <td>{player.stats.hits}</td>
+                  <td>{player.stats.homeruns}</td>
+                  <td>{player.stats.doubles}</td>
+                  <td>{player.stats.triples}</td>
+                  <td>{player.stats.rbi}</td>
+                  <td>{(player.stats.hits / player.stats.at_bats).toFixed(3)}</td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+          <Table striped bordered size="sm">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th>AB</th>
+                <th>H</th>
+                <th>HR</th>
+                <th>2B</th>
+                <th>3B</th>
+                <th>RBI</th>
+                <th>AVG</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{gameInfo.home}</td>
+                <td>{homeTeamStats.at_bats}</td>
+                <td>{homeTeamStats.hits}</td>
+                <td>{homeTeamStats.homeruns}</td>
+                <td>{homeTeamStats.doubles}</td>
+                <td>{homeTeamStats.triples}</td>
+                <td>{homeTeamStats.rbi}</td>
+                <td>{(homeTeamStats.hits / homeTeamStats.at_bats).toFixed(3)}</td>
+              </tr>
+            </tbody>
+          </Table>
+        </Col>
+      </Row>
+      <h1>Pitching</h1>
     </div>
   );
 }
