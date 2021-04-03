@@ -33,13 +33,13 @@ function PlayerStats() {
           {Object.keys(stats).map((year, i) =>
             <tr key={i}>
               <td>{year}</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{stats[year].AB}</td>
+              <td>{stats[year].H}</td>
+              <td>{stats[year].HR}</td>
+              <td>{stats[year]['2B']}</td>
+              <td>{stats[year]['3B']}</td>
+              <td>{stats[year].RBI}</td>
+              <td>{(stats[year].H / stats[year].AB).toFixed(3)}</td>
             </tr>
           )}
         </tbody>
