@@ -35,7 +35,7 @@ function Player() {
         </Row>
       </Jumbotron>
       <Nav>
-        <Nav.Link as={Link} to={"/player/" + player_id}>Player</Nav.Link>
+        <Nav.Link as={Link} to={"/player/" + player_id}>Overview</Nav.Link>
         <Nav.Link as={Link} to={"/player/" + player_id + "/log"}>Game Log</Nav.Link>
         <Nav.Link as={Link} to={"/player/" + player_id + "/stats"}>Stats</Nav.Link>
         <NavDropdown title="2021">
