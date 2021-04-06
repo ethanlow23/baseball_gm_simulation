@@ -284,12 +284,12 @@ def simulate():
                     db.session.rollback()
                     return jsonify({"error": "failed to update player stats"})
             for i in range(home_lineup.count()):
-                player_ab += home_box_score[i]["AB"]
-                player_h += home_box_score[i]["H"]
-                player_2b += home_box_score[i]["2B"]
-                player_3b += home_box_score[i]["3B"]
-                player_hr += home_box_score[i]["HR"]
-                player_rbi += home_box_score[i]["RBI"]
+                player_ab = home_box_score[i]["AB"]
+                player_h = home_box_score[i]["H"]
+                player_2b = home_box_score[i]["2B"]
+                player_3b = home_box_score[i]["3B"]
+                player_hr = home_box_score[i]["HR"]
+                player_rbi = home_box_score[i]["RBI"]
                 player_stat = Player_Stat(at_bats=player_ab, hits=player_h, doubles=player_2b, triples=player_3b, homeruns=player_hr, rbi=player_rbi, player=home_lineup[i], game=game, season=season)
                 db.session.add(player_stat)
                 try:

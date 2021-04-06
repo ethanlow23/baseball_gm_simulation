@@ -3,6 +3,20 @@ from app import db, Season, Team, Player, Game, Team_Stat, Player_Stat
 
 league_api = Blueprint('league_api', __name__)
 
+# GET LEAGUE OVERVIEW
+@league_api.route('/overview')
+def overview():
+  overview = {}
+  top_teams = Team.query.limit(5)
+  overview['top_teams'] = [team.serialize() for team in top_teams]
+  top_players = Player.query.limit(5)
+  overview['top_players'] = [player.serialize() for player in top_players]
+  recent_results = Game.query.filter(Game.team_stats.any()).order_by(Game.game_number.desc()).limit(15)
+  overview['recent_results'] = [game_result.serialize() for game_result in recent_results]
+  upcoming_games = Game.query.filter(~Game.team_stats.any()).limit(15)
+  overview['upcoming_games'] = [upcoming_game.serialize() for upcoming_game in upcoming_games]
+  return jsonify(overview)
+
 # GET ALL TEAMS
 @league_api.route('/teams')
 def teams():

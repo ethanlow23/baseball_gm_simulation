@@ -9,6 +9,19 @@ def team(team_id):
     team = Team.query.get(team_id)
     return jsonify(team.serialize())
 
+# GET A TEAM'S OVERVIEW
+@team_api.route('/<team_id>/overview')
+def team_overview(team_id):
+  team_overview = {}
+  team_overview['wins'] = 0
+  team_overview['losses'] = 0
+  recent_results = Game.query.filter((Game.home_id==team_id) | (Game.away_id==team_id)).filter(Game.team_stats.any()).order_by(Game.game_number.desc()).limit(5)
+  team_overview['recent_results'] = [recent_result.serialize() for recent_result in recent_results]
+  upcoming_games = Game.query.filter((Game.home_id==team_id) | (Game.away_id==team_id)).filter(~Game.team_stats.any()).limit(5)
+  team_overview['upcoming_games'] = [upcoming_game.serialize() for upcoming_game in upcoming_games]
+  team_overview['top_performers'] = []
+  return jsonify(team_overview)
+
 # GET A TEAM'S SCHEDULE
 @team_api.route('/<team_id>/schedule')
 def team_games(team_id):
