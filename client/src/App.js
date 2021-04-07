@@ -14,7 +14,7 @@ function App() {
       <Switch>
         <Route path="/" component={Home} exact />
         <Route path="/league" component={League} />
-        <Route path="/team" component={Team} />
+        <Route path="/team/:team_id" component={Team} />
         <Route path="/player/:player_id" component={Player} />
         <Route path="/game/:game_id" component={Game} />
       </Switch>

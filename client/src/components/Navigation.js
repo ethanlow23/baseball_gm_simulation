@@ -23,10 +23,10 @@ function Navigation () {
               <NavDropdown.Item as={Link} to="/league/stats">Stats</NavDropdown.Item>
             </NavDropdown>
             <NavDropdown title="Team">
-              <NavDropdown.Item as={Link} to="/team">My Team</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/team/schedule">Schedule</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/team/players">Roster</NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/team/stats">Team Stats</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/team/1">My Team</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/team/1/schedule">Schedule</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/team/1/players">Roster</NavDropdown.Item>
+              <NavDropdown.Item as={Link} to="/team/1/stats">Team Stats</NavDropdown.Item>
             </NavDropdown>
           </Nav>
       </Navbar>

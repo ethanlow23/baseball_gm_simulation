@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 
 function TeamSchedule() {
+  const { team_id } = useParams();
   const [games, setGames] = useState([]);
 
   useEffect(() => {
-    fetch('/teams/1/schedule')
+    fetch('/teams/' + team_id + '/schedule')
       .then(response => response.json())
       .then(data => setGames(data))
       .catch(error => console.log(error));
-  }, []);
+  }, [team_id]);
 
   return (
     <div>

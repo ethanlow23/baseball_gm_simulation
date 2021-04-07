@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
 
 function LeagueTeams() {
@@ -16,7 +17,7 @@ function LeagueTeams() {
       <h1>League Teams</h1>
       <ListGroup>
         {teams.map(team => 
-          <ListGroup.Item key={team.id}>{team.city} {team.name}</ListGroup.Item>
+          <ListGroup.Item as={Link} to={"/team/" + team.id} key={team.id}>{team.city} {team.name}</ListGroup.Item>
         )}
       </ListGroup>
     </div>

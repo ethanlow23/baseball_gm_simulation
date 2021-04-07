@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, useParams } from 'react-router-dom';
 import TeamOverview from './TeamOverview';
 import TeamSchedule from './TeamSchedule';
 import TeamPlayers from './TeamPlayers';
@@ -8,14 +8,15 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import Nav from 'react-bootstrap/Nav';
 
 function Team() {
+  const { team_id } = useParams();
   const [team, setTeam] = useState({});
 
   useEffect(() => {
-    fetch('/teams/1')
+    fetch('/teams/' + team_id)
       .then(response => response.json())
       .then(data => setTeam(data))
       .catch(error => console.log(error));
-  }, []);
+  }, [team_id]);
 
   return (
     <div>
@@ -24,16 +25,16 @@ function Team() {
         <h3>{team.city} {team.name}</h3>
       </Jumbotron>
       <Nav>
-        <Nav.Link as={Link} to={"/team"}>Home</Nav.Link>
-        <Nav.Link as={Link} to={"/team/schedule"}>Schedule</Nav.Link>
-        <Nav.Link as={Link} to={"/team/players"}>Roster</Nav.Link>
-        <Nav.Link as={Link} to={"/team/stats"}>Stats</Nav.Link>
+        <Nav.Link as={Link} to={"/team/" + team_id}>Home</Nav.Link>
+        <Nav.Link as={Link} to={"/team/" + team_id + "/schedule"}>Schedule</Nav.Link>
+        <Nav.Link as={Link} to={"/team/" + team_id + "/players"}>Roster</Nav.Link>
+        <Nav.Link as={Link} to={"/team/" + team_id + "/stats"}>Stats</Nav.Link>
       </Nav>
       <Switch>
-        <Route path="/team" component={TeamOverview} exact />
-        <Route path="/team/schedule" component={TeamSchedule} />
-        <Route path="/team/players" component={TeamPlayers} />
-        <Route path="/team/stats" component={TeamStats} />
+        <Route path="/team/:team_id" component={TeamOverview} exact />
+        <Route path="/team/:team_id/schedule" component={TeamSchedule} />
+        <Route path="/team/:team_id/players" component={TeamPlayers} />
+        <Route path="/team/:team_id/stats" component={TeamStats} />
       </Switch>
     </div>
   );

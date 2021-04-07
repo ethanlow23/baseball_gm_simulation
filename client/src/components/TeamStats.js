@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 
 function TeamStats() {
+  const { team_id } = useParams();
   const [stats, setStats] = useState([]);
 
   useEffect(() => {
-    fetch('/teams/1/stats')
+    fetch('/teams/' + team_id + '/stats')
       .then(response => response.json())
       .then(data => setStats(data))
       .catch(error => console.log(error));
-  }, []);
+  }, [team_id]);
 
   return (
     <div>
