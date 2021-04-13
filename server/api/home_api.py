@@ -103,7 +103,7 @@ def simulate():
 
         # game_number = Game.query.filter(Game.away_score == 0 and Game.home_score == 0).first().game_number
         season = Season.query.get(1)
-        game_number = (Game.query.filter(Game.team_stats.any()).count() // 15) + 1
+        game_number = (Game.query.filter(Game.home_team_stat.has()).count() // 15) + 1
         games = Game.query.filter_by(season=season).filter_by(game_number=game_number)
         for game in games:
             home_lineup = Player.query.filter_by(team_id=game.home.id).filter(Player.position != "SP")

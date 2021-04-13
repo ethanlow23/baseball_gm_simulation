@@ -6,7 +6,7 @@ game_api = Blueprint('game_api', __name__)
 # GET ALL GAMES
 @game_api.route('/')
 def games():
-    all_games = Game.query.filter(Game.team_stats.any())
+    all_games = Game.query.filter(Game.home_team_stat.has())
     return jsonify([game.serialize() for game in all_games])
 
 # GET ALL GAMES BY GAME NUMBER
@@ -54,7 +54,7 @@ def game(game_id):
             game_info['away_player_stats'].append(player_info)
         else:
             game_info['home_player_stats'].append(player_info) 
-    return jsonify(game_info)
+    return jsonify(game.serialize())
     '''
     box_score = {}
     t1 = game.team_stats[0]
