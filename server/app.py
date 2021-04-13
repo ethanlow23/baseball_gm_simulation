@@ -39,6 +39,7 @@ class Team(db.Model):
     season_id = db.Column(db.Integer, db.ForeignKey('season.id'), nullable=False)
     players = db.relationship('Player', backref='team')
     team_stats = db.relationship('Team_Stat', backref='team')
+    player_stats = db.relationship('Player_Stat', backref='team')
     games = db.relationship('Game', primaryjoin='or_(Team.id==Game.home_id, Team.id==Game.away_id)')
     # home_games = db.relationship('Game', foreign_keys='Game.home_id', backref='home')
     # away_games = db.relationship('Game', foreign_keys='Game.away_id', backref='away')
@@ -95,8 +96,8 @@ class Game(db.Model):
     home_team_stat = db.relationship('Team_Stat', uselist=False, primaryjoin='and_(Game.id==Team_Stat.game_id, Game.home_id==Team_Stat.team_id)')
     away_team_stat = db.relationship('Team_Stat', uselist=False, primaryjoin='and_(Game.id==Team_Stat.game_id, Game.away_id==Team_Stat.team_id)')
     # player_stats = db.relationship('Player_Stat', backref='game')
-    home_player_stats = db.relationship('Player_Stat', primaryjoin='and_(Game.id==Player_Stat.game_id, Game.home_id==Player_Stat.player.team_id)')
-    away_player_stats = db.relationship('Player_Stat', primaryjoin='and_(Game.id==Player_Stat.game_id, Game.away_id==Player_Stat.player.team_id)')
+    home_player_stats = db.relationship('Player_Stat', primaryjoin='and_(Game.id==Player_Stat.game_id, Game.home_id==Player_Stat.team_id)')
+    away_player_stats = db.relationship('Player_Stat', primaryjoin='and_(Game.id==Player_Stat.game_id, Game.away_id==Player_Stat.team_id)')
 
     home = db.relationship('Team', foreign_keys='Game.home_id')
     away = db.relationship('Team', foreign_keys='Game.away_id')
@@ -110,10 +111,10 @@ class Game(db.Model):
             "away_id": self.away_id,
             "home_score": self.home_score,
             "away_score": self.away_score,
-            "home_team_stat": self.home_team_stat.serialize(),
-            "away_team_stat": self.away_team_stat.serialize(),
-            "home_player_stats": [home_player_stat.serialize() for player_stat in self.home_player_stats],
-            "away_player_stats": [away_player_stat.serialize() for player_stat in self.away_player_stats],
+            "home_team_stat": self.home_team_stat.serialize() if self.home_team_stat else None,
+            "away_team_stat": self.away_team_stat.serialize() if self.away_team_stat else None,
+            "home_player_stats": [home_player_stat.serialize() for home_player_stat in self.home_player_stats],
+            "away_player_stats": [away_player_stat.serialize() for away_player_stat in self.away_player_stats],
         }
 
 class Team_Stat(db.Model):
@@ -157,6 +158,7 @@ class Player_Stat(db.Model):
     homeruns = db.Column(db.Integer, nullable=False, default=0)
     rbi = db.Column(db.Integer, nullable=False, default=0)
     player_id = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
+    team_id = db.Column(db.Integer, db.ForeignKey('team.id'), nullable=False)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
     season_id = db.Column(db.Integer, db.ForeignKey('season.id'), nullable=False)
 
@@ -172,6 +174,7 @@ class Player_Stat(db.Model):
             "homeruns": self.homeruns,
             "rbi": self.rbi,
             "player_id": self.player_id,
+            "team_id": self.team_id,
             "game_id": self.game_id,
             "season_id": self.season_id
         }

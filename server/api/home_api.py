@@ -252,6 +252,14 @@ def simulate():
             print(away_pitching)
             print(home_pitching)
             # =============================================================================================================================
+            game.away_score = away_score
+            game.home_score = home_score
+            try:
+                db.session.commit()
+            except Exception as e:
+                print(e)
+                db.session.rollback()
+                return jsonify({"error": "failed to update game score"})
             team_stat = Team_Stat(at_bats=away_team_totals["AB"], hits=away_team_totals["H"], doubles=away_team_totals["2B"], triples=away_team_totals["3B"], homeruns=away_team_totals["HR"], rbi=away_team_totals["RBI"], team=game.away, game=game, season=season)
             db.session.add(team_stat)
             try:
@@ -275,7 +283,7 @@ def simulate():
                 player_3b = away_box_score[i]["3B"]
                 player_hr = away_box_score[i]["HR"]
                 player_rbi = away_box_score[i]["RBI"]
-                player_stat = Player_Stat(at_bats=player_ab, hits=player_h, doubles=player_2b, triples=player_3b, homeruns=player_hr, rbi=player_rbi, player=away_lineup[i], game=game, season=season)
+                player_stat = Player_Stat(at_bats=player_ab, hits=player_h, doubles=player_2b, triples=player_3b, homeruns=player_hr, rbi=player_rbi, player=away_lineup[i], team=game.away, game=game, season=season)
                 db.session.add(player_stat)
                 try:
                     db.session.commit()
@@ -290,7 +298,7 @@ def simulate():
                 player_3b = home_box_score[i]["3B"]
                 player_hr = home_box_score[i]["HR"]
                 player_rbi = home_box_score[i]["RBI"]
-                player_stat = Player_Stat(at_bats=player_ab, hits=player_h, doubles=player_2b, triples=player_3b, homeruns=player_hr, rbi=player_rbi, player=home_lineup[i], game=game, season=season)
+                player_stat = Player_Stat(at_bats=player_ab, hits=player_h, doubles=player_2b, triples=player_3b, homeruns=player_hr, rbi=player_rbi, player=home_lineup[i], team=game.home, game=game, season=season)
                 db.session.add(player_stat)
                 try:
                     db.session.commit()
