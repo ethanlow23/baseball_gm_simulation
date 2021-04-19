@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -30,7 +31,7 @@ function LeagueOverview() {
           <h3>Recent Games</h3>
           <ListGroup>
             {recentResults.map(result =>
-              <ListGroup.Item>{result.game_number}</ListGroup.Item>
+              <ListGroup.Item><Link to={"/game/" + result.id}>{result.away} {result.away_score}-{result.home_score} {result.home}</Link></ListGroup.Item>
             )}
           </ListGroup>
         </Col>
@@ -47,7 +48,7 @@ function LeagueOverview() {
             <tbody>
               {topTeams.map(team =>
                 <tr>
-                  <td>{team.city} {team.name}</td>
+                  <td><Link to={"/team/" + team.id}>{team.city} {team.name}</Link></td>
                   <td>0</td>
                   <td>0</td>
                 </tr>
@@ -61,7 +62,7 @@ function LeagueOverview() {
           <h3>Upcoming Games</h3>
           <ListGroup>
             {upcomingGames.map(game =>
-              <ListGroup.Item>{game.game_number}</ListGroup.Item>
+              <ListGroup.Item>{game.away} vs {game.home}</ListGroup.Item>
             )}
           </ListGroup>
         </Col>
@@ -78,7 +79,7 @@ function LeagueOverview() {
             <tbody>
               {topPlayers.map(player =>
                 <tr>
-                  <td>{player.first_name} {player.last_name}</td>
+                  <td><Link to={"/player/" + player.id}>{player.first_name} {player.last_name}</Link></td>
                   <td>0</td>
                   <td>0</td>
                 </tr>

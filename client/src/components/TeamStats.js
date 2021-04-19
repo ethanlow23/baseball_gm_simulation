@@ -4,18 +4,23 @@ import Table from 'react-bootstrap/Table';
 
 function TeamStats() {
   const { team_id } = useParams();
-  const [stats, setStats] = useState([]);
+  const [battersStats, setBattersStats] = useState([]);
+  const [pitchersStats, setPitchersStats] = useState([]);
 
   useEffect(() => {
     fetch('/teams/' + team_id + '/stats')
       .then(response => response.json())
-      .then(data => setStats(data))
+      .then(data => {
+        setBattersStats(data.batters);
+        setPitchersStats(data.pitchers);
+      })
       .catch(error => console.log(error));
   }, [team_id]);
 
   return (
     <div>
       <h1>Team Stats</h1>
+      <h3>Batting</h3>
       <Table striped bordered hover size="sm">
         <thead>
           <tr>
@@ -30,16 +35,31 @@ function TeamStats() {
           </tr>
         </thead>
         <tbody>
-          {stats.map(stat => 
-            <tr key={stat.player.id}>
-              <td><Link to={"/player/" + stat.player.id}>{stat.player.first_name} {stat.player.last_name}</Link></td>
-              <td>{stat.AB}</td>
-              <td>{stat.H}</td>
-              <td>{stat.HR}</td>
-              <td>{stat['2B']}</td>
-              <td>{stat['3B']}</td>
-              <td>{stat.RBI}</td>
-              <td>{(stat.H / stat.AB).toFixed(3)}</td>
+          {battersStats.map(batter => 
+            <tr key={batter.player.id}>
+              <td><Link to={"/player/" + batter.player.id}>{batter.player.first_name} {batter.player.last_name}</Link></td>
+              <td>{batter.AB}</td>
+              <td>{batter.H}</td>
+              <td>{batter.HR}</td>
+              <td>{batter['2B']}</td>
+              <td>{batter['3B']}</td>
+              <td>{batter.RBI}</td>
+              <td>{(batter.H / batter.AB).toFixed(3)}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+      <h3>Pitching</h3>
+      <Table striped bordered hover size="sm">
+        <thead>
+          <tr>
+            <th>Player</th>
+          </tr>
+        </thead>
+        <tbody>
+          {pitchersStats.map(pitcher =>
+            <tr key={pitcher.player.id}>
+              <td><Link to={"/player/" + pitcher.player.id}>{pitcher.player.first_name} {pitcher.player.last_name}</Link></td>
             </tr>
           )}
         </tbody>

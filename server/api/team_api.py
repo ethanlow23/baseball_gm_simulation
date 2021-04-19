@@ -42,15 +42,19 @@ def team_roster(team_id):
 @team_api.route('/<team_id>/stats')
 def team_stats(team_id):
   players = Team.query.get(team_id).players
-  stats = []
+  stats = {'batters': [], 'pitchers': []}
   for player in players:
-    player_stats = {'player': player.serialize()}
-    for log in player.player_stats:
-      player_stats['AB'] = player_stats.get('AB', 0) + log.at_bats
-      player_stats['H'] = player_stats.get('H', 0) + log.hits
-      player_stats['2B'] = player_stats.get('2B', 0) + log.doubles
-      player_stats['3B'] = player_stats.get('3B', 0) + log.triples
-      player_stats['HR'] = player_stats.get('HR', 0) + log.homeruns
-      player_stats['RBI'] = player_stats.get('RBI', 0) + log.rbi
-    stats.append(player_stats)
+    if player.position != 'SP':
+      batter_stats = {'player': player.serialize()}
+      for log in player.player_stats:
+        batter_stats['AB'] = batter_stats.get('AB', 0) + log.at_bats
+        batter_stats['H'] = batter_stats.get('H', 0) + log.hits
+        batter_stats['2B'] = batter_stats.get('2B', 0) + log.doubles
+        batter_stats['3B'] = batter_stats.get('3B', 0) + log.triples
+        batter_stats['HR'] = batter_stats.get('HR', 0) + log.homeruns
+        batter_stats['RBI'] = batter_stats.get('RBI', 0) + log.rbi
+      stats['batters'].append(batter_stats)
+    else:
+      pitcher_stats = {'player': player.serialize()}
+      stats['pitchers'].append(pitcher_stats)
   return jsonify(stats)

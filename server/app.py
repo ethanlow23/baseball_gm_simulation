@@ -115,6 +115,8 @@ class Game(db.Model):
             "away_team_stat": self.away_team_stat.serialize() if self.away_team_stat else None,
             "home_player_stats": [home_player_stat.serialize() for home_player_stat in self.home_player_stats],
             "away_player_stats": [away_player_stat.serialize() for away_player_stat in self.away_player_stats],
+            "home": '{} {}'.format(self.home.city, self.home.name),
+            "away": '{} {}'.format(self.away.city, self.away.name)
         }
 
 class Team_Stat(db.Model):

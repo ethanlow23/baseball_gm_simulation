@@ -11,9 +11,9 @@ def overview():
   overview['top_teams'] = [team.serialize() for team in top_teams]
   top_players = Player.query.limit(5)
   overview['top_players'] = [player.serialize() for player in top_players]
-  recent_results = Game.query.filter(Game.home_team_stat.has()).order_by(Game.game_number.desc()).limit(15)
+  recent_results = Game.query.filter(Game.home_team_stat.has()).order_by(Game.game_number.desc()).limit(7)
   overview['recent_results'] = [game_result.serialize() for game_result in recent_results]
-  upcoming_games = Game.query.filter(~Game.home_team_stat.has()).limit(15)
+  upcoming_games = Game.query.filter(~Game.home_team_stat.has()).limit(7)
   overview['upcoming_games'] = [upcoming_game.serialize() for upcoming_game in upcoming_games]
   return jsonify(overview)
 
